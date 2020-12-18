@@ -7,6 +7,6 @@ class User < ApplicationRecord
   validates :l_name, presence: true
   validates :dob, presence: true
   validates :doj, presence: true
-  has_many :roles, through :user_roles
+  has_many :roles, through: :user_roles
   has_many :user_roles
 end
