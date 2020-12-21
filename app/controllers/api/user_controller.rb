@@ -8,9 +8,12 @@ class Api::UserController < ApplicationController
     end   
   end
   def destroy
-  current_user&.authentication_token = nil
-    if current_user.save
+    if current_user
+      current_user.authentication_token = nil
+      current_user.save
       render json: "Logged Out" 
-    end  
-  end
+    else
+      render json: "Unavailabe toke"    
+    end
+  end  
 end
