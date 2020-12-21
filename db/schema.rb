@@ -10,7 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema.define(version: 2020_12_21_061038) do
+=======
+ActiveRecord::Schema.define(version: 2020_12_18_125038) do
+>>>>>>> a2e0f896a4591a7bb8bf04ed0170780009618956
 
   create_table "roles", force: :cascade do |t|
     t.string "name"
@@ -35,8 +39,11 @@ ActiveRecord::Schema.define(version: 2020_12_21_061038) do
     t.datetime "remember_created_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+<<<<<<< HEAD
     t.string "authentication_token"
     t.index ["authentication_token"], name: "index_users_on_authentication_token"
+=======
+>>>>>>> a2e0f896a4591a7bb8bf04ed0170780009618956
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
