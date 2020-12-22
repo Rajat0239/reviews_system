@@ -1,9 +1,10 @@
-class Api::RegistrationController < ApplicationController
-  def create
-    if User.find_by(authentication_token: params[:Authorization])
-      
-    else
+class Api: UserController < ApplicationController
 
-    end
+  #load_and_authorize_resource
+  def create
+    byebug
+    # @user = User.find_by(authentication_token: params[:Authorization]).roles.pluck:name
+    # @user[0] == "admin"
+    # byebug
   end
 end

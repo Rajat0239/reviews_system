@@ -1,4 +1,5 @@
-class Api::UserController < ApplicationController
+class Api::UsersController < ApplicationController
+  load_and_authorize_resource
   def create
     @user = User.find_by(email: params[:email])
     if @user&.valid_password?(params[:password]) #@user && @user.valid_password?(params[:password])
