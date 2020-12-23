@@ -11,9 +11,18 @@ class Api::UsersController < ApplicationController
     else
       render json: @user.errors.full_messages 
     end
-  end  
+  end 
+  def update
+    @user = User.find_by(email: params[:user][:email])
+    @user.update(user_params)
+    # @user.user_roles.new(role_id: params[:user][:role_id])
+    # if @user.update
+    #   render json: "hkf"
+    # end
+    render json: @user
+  end 
   private
     def user_params
-      params.require(:user).permit(:email, :password, :f_name, :l_name, :dob, :doj) 
+      params.require(:user).permit(:email, :password, :f_name, :l_name, :dob, :doj, { user_roles_attributes:  [:id , :role_id] }) 
     end
 end
