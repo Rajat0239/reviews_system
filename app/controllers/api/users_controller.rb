@@ -5,16 +5,15 @@ class Api::UsersController < ApplicationController
   end
   def create
     @user = User.new(user_params)
+    @user.user_roles.new(role_id: params[:user][:role_id])
     if @user.save
-      @user_id = User.select(:id).find_by(email: params[:email])
-      @roll_id = Role.select(:id).find_by(name: params[:role_name])
-      byebug
-      @updated = UserRole.new(role_id: @roll_id , user_id: @user_id)
+      render success: true
     else
+      render json: @user.errors.full_messages 
     end
   end  
   private
     def user_params
-      params.permit(:email, :password, :f_name, :l_name, :dob, :doj) 
+      params.require(:user).permit(:email, :password, :f_name, :l_name, :dob, :doj) 
     end
 end
