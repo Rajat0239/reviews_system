@@ -1,7 +1,7 @@
 class Api::SessionController < ApplicationController
   def create
     @user = User.find_by(email: params[:email])
-    if @user&.valid_password?(params[:password]) #@user && @user.valid_password?(params[:password])
+    if @user&.valid_password?(params[:password])
       render json: @user.as_json(only: [:email, :authentication_token]), status: :created
     else
       render json: "wrong password"
