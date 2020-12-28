@@ -169,7 +169,7 @@ DEPENDENCIES
   bootsnap (>= 1.4.2)
   byebug
   cancancan
-  devise
+  devise (~> 4.6, >= 4.6.1)
   listen (~> 3.2)
   puma (~> 4.1)
   rails (~> 6.0.3, >= 6.0.3.4)

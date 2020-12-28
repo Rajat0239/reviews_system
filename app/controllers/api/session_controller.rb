@@ -1,4 +1,5 @@
 class Api::SessionController < ApplicationController
+  skip_load_and_authorize_resource
   def create
     @user = User.find_by(email: params[:email])
     if @user&.valid_password?(params[:password])
