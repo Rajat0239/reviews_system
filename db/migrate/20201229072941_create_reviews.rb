@@ -4,6 +4,7 @@ class CreateReviews < ActiveRecord::Migration[6.0]
       t.belongs_to :user
       t.integer    :ratings
       t.text       :feedback
+      t.boolean    :status, default: false
       t.timestamps
     end
   end
