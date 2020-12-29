@@ -1,6 +1,6 @@
 class Api::ReviewsController < ApplicationController
   def index
-    render json: User.reviews
+    (current_user.roles.pluck(:name).include? "manager") ? (render json: Review.all) : (render json: current_user.reviews)
   end
   def create
     @review = Review.new(review_params)
@@ -8,8 +8,16 @@ class Api::ReviewsController < ApplicationController
     @review.save ? (render json: @review) : (@review.errors.full_messages)
   end
   def update
-    @review = current_user.reviews.where(id: params[:id])
-    @review.update(review_params)
+    if current_user.roles.pluck(:name).include? "manager"
+      @review.status = true
+      @review.update(review_params)
+      render json: @review
+    elsif !@review.status && @review.user_id == current_user.id
+      @review.update(review_params)
+      render json: @review
+    else
+      render json: "You can not update"
+    end
   end
   private
     def review_params
