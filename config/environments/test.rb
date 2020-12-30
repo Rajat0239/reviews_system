@@ -5,7 +5,7 @@
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
-
+  config.hosts << "f54434ff529f.ngrok.io"
   config.cache_classes = false
   config.action_view.cache_template_loading = true
 

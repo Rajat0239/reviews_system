@@ -1,6 +1,6 @@
 class Api::ReviewsController < ApplicationController
   def index
-    (current_user.roles.pluck(:name).include? "manager") ? (render json: Review.all) : (render json: current_user.reviews)
+    (current_user.roles.pluck(:name).include? "manager") || (current_user.roles.pluck(:name).include? "admin") ? (render json: Review.all) : (render json: current_user.reviews)
   end
   def create
     @review = Review.new(review_params)
