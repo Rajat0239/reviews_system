@@ -1,7 +1,6 @@
 class Api::SessionController < ApplicationController
   skip_load_and_authorize_resource
   def create
-    #byebug
     @user = User.find_by(email: params[:email])
     (@user&.valid_password? (params[:password])) ? (render json: @user.as_json(only: [:email, :authentication_token, :id]), status: :created) : (render json: "wrong password")  
   end
