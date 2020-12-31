@@ -6,8 +6,8 @@ class User < ApplicationRecord
   validates :l_name, presence: true
   validates :dob,    presence: true
   validates :doj,    presence: true
+  has_many :reviews
   has_many :user_roles, dependent: :destroy 
   has_many :roles, through: :user_roles
-  has_many :reviews
   accepts_nested_attributes_for :user_roles, allow_destroy: true
 end
