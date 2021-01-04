@@ -2,10 +2,10 @@ class Api::ReviewsController < ApplicationController
   def index
     if roles.include? "admin"
       render json: Review.select(:id, :ratings,:feedback).where(status: true)
-    elsif roles.include? "manager"
+    #elsif roles.include? "manager"
       #render json: Review.where(reporting_user_id: current_user.id || user_id: current_user.id)
     else
-      
+      render json: current_user.reviews
     end
   end
   def create
