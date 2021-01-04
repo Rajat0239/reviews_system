@@ -12,5 +12,8 @@ class ApplicationController < ActionController::API
   def current_quarter
     return ((Time.now.month - 1)/3+1).to_s+" "+(Time.now.year).to_s
   end
+  def roles
+    return current_user.roles.pluck(:name)
+  end
 end
  

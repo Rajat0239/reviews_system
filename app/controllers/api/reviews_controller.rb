@@ -1,9 +1,9 @@
 class Api::ReviewsController < ApplicationController
   def index
-    if current_user.roles.pluck(:name).include? "admin"
+    if roles.include? "admin"
       render json: Review.select(:id, :ratings,:feedback).where(status: true)
-    elsif current_user.roles.pluck(:name).include? "manager"
-      render json: Review.where(reporting_user_id: current_user.id || user_id: current_user.id)
+    elsif roles.include? "manager"
+      #render json: Review.where(reporting_user_id: current_user.id || user_id: current_user.id)
     else
       
     end
