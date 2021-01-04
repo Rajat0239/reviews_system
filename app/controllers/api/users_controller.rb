@@ -5,6 +5,7 @@ class Api::UsersController < ApplicationController
     @user.save ? (render json: @user) : (render json: @user.errors.full_messages)
   end 
   def update
+    #byebug
     if ((roles.include? "admin") && @user = User.find(params[:id])) 
     @user.update(params.require(:user).permit(:f_name, :l_name, :dob, :doj, {user_roles_attributes: [:id, :role_id]}))
     render json: @user.roles
@@ -17,6 +18,6 @@ class Api::UsersController < ApplicationController
   end
   private
     def user_params
-      params.require(:user).permit(:email, :password, :f_name, :l_name, :dob, :doj, { user_roles_attributes:  [:id , :role_id] }) 
+      params.require(:user).permit(:email, :password, :f_name, :l_name, :dob, :doj) 
     end
 end
