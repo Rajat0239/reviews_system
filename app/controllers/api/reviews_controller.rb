@@ -14,7 +14,7 @@ class Api::ReviewsController < ApplicationController
   end
   def update
     if current_user.id == Review.find(params[:id]).reporting_user_id
-      params[:status] == "true" ? (@review.update(status: true); render json: @review) : (@review.update(status: false); render json: "Not approved send a message to a user")
+      params[:status] == "true" ? (@review.update(status: true); render json: @review) : (@review.update(status: false); (UserMailer.sample_email(@review).deliver))
     elsif !@review.status && @review.user_id == current_user.id
       (@review.update(review_params) ? (render json: @review) : (render json: @review.errors.full_messages)) if @review.reporting_user_current_role = User.find(params[:review][:reporting_user_id]).current_role   
     else
