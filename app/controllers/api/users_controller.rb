@@ -17,6 +17,9 @@ class Api::UsersController < ApplicationController
       render json: "you can not update"
     end
   end
+  def destroy
+    byebug
+  end
   private
     def user_params
       params.require(:user).permit(:email, :password, :f_name, :l_name, :dob, :doj) 
