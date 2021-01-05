@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_04_110443) do
+ActiveRecord::Schema.define(version: 2021_01_04_134506) do
 
   create_table "reviews", force: :cascade do |t|
     t.integer "ratings"
@@ -50,9 +50,9 @@ ActiveRecord::Schema.define(version: 2021_01_04_110443) do
     t.datetime "remember_created_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.string "authentication_token", limit: 30
+    t.string "authentication_token"
     t.string "current_role"
-    t.index ["authentication_token"], name: "index_users_on_authentication_token", unique: true
+    t.index ["authentication_token"], name: "index_users_on_authentication_token"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end

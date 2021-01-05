@@ -15,5 +15,8 @@ class ApplicationController < ActionController::API
   def roles
     return current_user.roles.pluck(:name)
   end
+  def search_role(id)
+    User.find_by(id: id.to_i)&.current_role
+  end
 end
  
