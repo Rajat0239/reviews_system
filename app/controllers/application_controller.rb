@@ -3,6 +3,9 @@ class ApplicationController < ActionController::API
   rescue_from CanCan::AccessDenied do |exception|
     render json: "Not Authorised"
   end
+  rescue_from ActiveRecord::RecordNotFound do |exception|
+    render json: "Record Not Found"
+  end
   def current_user
     @current_user ||= User.find_by(authentication_token: request.headers['Authorization'])
   end
@@ -14,9 +17,6 @@ class ApplicationController < ActionController::API
   end
   def roles
     return current_user.roles.pluck(:name)
-  end
-  def search_role(id)
-    User.find_by(id: id.to_i)&.current_role
   end
 end
  

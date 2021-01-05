@@ -18,7 +18,7 @@ class Api::UsersController < ApplicationController
     end
   end
   def destroy
-    byebug
+    @user.destroy
   end
   private
     def user_params

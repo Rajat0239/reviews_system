@@ -7,7 +7,8 @@ class Api::ReviewsController < ApplicationController
       @review = current_user.reviews.new(review_params)
       @review.quarter = current_quarter
       @review.user_current_role = current_user.current_role
-      (@review.reporting_user_current_role = search_role(params[:review][:reporting_user_id])) ? (@review.save ? (render json: @review) : (render json: @review.errors.full_messages)) : (render json: "reporting user id not found")
+      @review.reporting_user_current_role = User.find_by(id: params[:review][:reporting_user_id].to_i)&.current_role
+      @review.save ? (render json: @review) : (render json: @review.errors.full_messages)
     else
       render json: "You have given review for this quarter"
     end
