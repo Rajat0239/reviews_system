@@ -10,7 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_04_134506) do
+ActiveRecord::Schema.define(version: 2021_01_06_073302) do
+
+  create_table "review_dates", force: :cascade do |t|
+    t.integer "user_id"
+    t.string "quarter"
+    t.date "review_date"
+    t.date "review_deadline_date"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_review_dates_on_user_id"
+  end
 
   create_table "reviews", force: :cascade do |t|
     t.integer "ratings"

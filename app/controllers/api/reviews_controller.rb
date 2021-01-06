@@ -22,6 +22,9 @@ class Api::ReviewsController < ApplicationController
       render json: "You can not update"
     end
   end
+  def review_dates
+    
+  end
   private
     def review_params
       params.require(:review).permit(:ratings , :feedback, :reporting_user_id)

@@ -4,5 +4,6 @@ Rails.application.routes.draw do
     resources :session, only: [:create, :destroy]
     resources :roles, only: [:index]
     resources :reviews, only: [:create, :index, :update]
+    resources :review_dates, only: [:create]
   end
 end
