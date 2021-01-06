@@ -8,6 +8,7 @@ gem 'devise', '~> 4.6', '>= 4.6.1'
 gem 'simple_token_authentication', '~> 1.0' 
 gem 'cancancan'
 gem 'figaro'
+gem 'rack-cors', :require => 'rack/cors'
 gem 'rails', '~> 6.0.3', '>= 6.0.3.4'
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3', '~> 1.4'

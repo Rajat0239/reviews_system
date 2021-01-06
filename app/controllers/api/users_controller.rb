@@ -1,9 +1,5 @@
 class Api::UsersController < ApplicationController
-
-  # skip_before_action :verify_authenticity_token, only: [:create]
-
   def create
-    byebug
     @user = User.new(user_params)
     @user.user_roles.new(role_id: params[:user][:role_id])
     @user.current_role = Role.find(params[:user][:role_id]).name
