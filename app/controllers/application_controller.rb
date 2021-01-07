@@ -18,5 +18,10 @@ class ApplicationController < ActionController::API
   def roles
     return current_user.roles.pluck(:name)
   end
+  def date_in_range
+    @review = ReviewDate.find_by(quarter: current_quarter)
+    date = Time.now.to_date
+    return (date <=  @review.review_date && date >= @review.review_deadline_date)
+  end
 end
  
