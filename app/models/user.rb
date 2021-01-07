@@ -8,6 +8,7 @@ class User < ApplicationRecord
   validates :doj,             presence: true
   validates :current_role,    presence: true
   validates :reporting_user_id, presence: true
+  scope :find_user, ->(id) {find(id)}
   has_many :reviews, dependent: :destroy
   has_many :user_roles, dependent: :destroy 
   has_many :roles, through: :user_roles
