@@ -26,7 +26,7 @@ class Api::UsersController < ApplicationController
 
   private
     def user_params
-      params.require(:user).permit(:email, :password, :f_name, :l_name, :dob, :doj) 
+      params.require(:user).permit(:email, :password, :f_name, :l_name, :dob, :doj , :reporting_user_id) 
     end
     def roles
       return current_user.roles.pluck(:name)
