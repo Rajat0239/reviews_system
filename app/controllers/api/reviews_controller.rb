@@ -2,6 +2,7 @@ class Api::ReviewsController < ApplicationController
   def index
     (roles.include? "admin") ? (render json: Review.select(:id, :ratings, :feedback).where(status:true)) : (render json: current_user.reviews)
   end
+
   def create
     if date_in_range
       if !review_status
@@ -17,6 +18,7 @@ class Api::ReviewsController < ApplicationController
       (render json: "Review Date is not available")
     end
   end
+
   def update
     if date_in_range
       if current_user.id == Review.find(params[:id]).reporting_user_id
@@ -30,8 +32,19 @@ class Api::ReviewsController < ApplicationController
       render json: "Review Updation date is expired"
     end
   end
+
   private
     def review_params
       params.require(:review).permit(:ratings , :feedback, :reporting_user_id)
+    end
+
+    def review_status
+      return current_user.reviews.pluck(:quarter).include? current_quarter
+    end
+    
+    def date_in_range
+      @review = ReviewDate.find_by(quarter: current_quarter)
+      date = Time.now.to_date
+      return (date <=  @review.review_date && date >= @review.review_deadline_date)
     end
 end
