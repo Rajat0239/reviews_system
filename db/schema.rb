@@ -10,27 +10,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_07_114108) do
+ActiveRecord::Schema.define(version: 2021_01_08_112636) do
 
   create_table "review_dates", force: :cascade do |t|
-    t.integer "user_id"
     t.string "quarter"
-    t.date "review_date"
-    t.date "review_deadline_date"
+    t.date "start_date"
+    t.date "deadline_date"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["user_id"], name: "index_review_dates_on_user_id"
   end
 
   create_table "reviews", force: :cascade do |t|
+    t.integer "user_id"
     t.integer "ratings"
     t.text "feedback"
-    t.integer "user_id"
-    t.boolean "status", default: false
     t.string "quarter"
+    t.boolean "status", default: false
+    t.string "user_current_role"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.string "user_current_role"
     t.index ["user_id"], name: "index_reviews_on_user_id"
   end
 
@@ -57,10 +55,10 @@ ActiveRecord::Schema.define(version: 2021_01_07_114108) do
     t.datetime "remember_created_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.string "authentication_token", limit: 30
+    t.string "authentication_token"
     t.string "current_role"
     t.integer "reporting_user_id"
-    t.index ["authentication_token"], name: "index_users_on_authentication_token", unique: true
+    t.index ["authentication_token"], name: "index_users_on_authentication_token"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end

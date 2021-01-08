@@ -7,9 +7,9 @@ class UserMailer < ApplicationMailer
   def review_date_email(review)
     @review = review
     @user = User.where.not(current_role: "admin")
-    @user.each do |e|
-      send_email(e.email).deliver
-    end
+    # @user.each do |e|
+    #   send_email(e.email).deliver
+    # end
   end
   def send_email(email)
     mail(to: email, subject: 'Review Reminder')
