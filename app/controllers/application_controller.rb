@@ -28,5 +28,9 @@ class ApplicationController < ActionController::API
   def send_error_messages(field)
     field.errors.full_messages
   end
+
+  def role_is_admin
+    return current_user.current_role == "admin")
+  end 
 end
  
