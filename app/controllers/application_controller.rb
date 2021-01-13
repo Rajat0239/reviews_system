@@ -3,7 +3,7 @@ class ApplicationController < ActionController::API
   rescue_from CanCan::AccessDenied do |exception|
     render json: "Not Authorised"
   end
-  
+
   rescue_from ActiveRecord::RecordNotFound do |exception|
     render json: "Record Not Found"
   end
@@ -20,6 +20,7 @@ class ApplicationController < ActionController::API
     return ReviewDate.exists?(quarter: current_quarter)
   end
 
+  
   def is_role_include_admin
     return current_user.roles.pluck(:name).include? "admin" 
   end
