@@ -10,6 +10,8 @@ class Api::ReviewsController < ApplicationController
     if in_a_valid_date
       (!can_give_review) ? (
         @review = current_user.reviews.new(review_params);
+        @review.quarter = current_quarter
+        @review.user_current_role = current_user.current_role
         (@review.save ? (render json: @review) : (render json: @review.errors.full_messages));
         ) : (render json: "you already submitted the review go to update")  
     else
@@ -31,7 +33,7 @@ class Api::ReviewsController < ApplicationController
 
   private
     def review_params
-      params.require(:review).permit(:ratings, :feedback, quarter: current_quarter, user_current_role: current_user.current_role)
+      params.require(:review).permit(:ratings, :feedback)
     end
 
     def can_give_review
