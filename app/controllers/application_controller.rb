@@ -18,5 +18,9 @@ class ApplicationController < ActionController::API
   def is_quarter_present
     return ReviewDate.exists?(quarter: current_quarter)
   end
+
+  def send_error_messages(field)
+    field.errors.full_messages
+  end
 end
  
