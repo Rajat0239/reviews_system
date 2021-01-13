@@ -45,16 +45,11 @@ class Api::UsersController < ApplicationController
     end
     
     def is_reporting_role_manager
-      if !(User.find_user(params[:user][:reporting_user_id]).current_role == "manager")
-        render json: "reporting user role is not a manager"
-      end
+      render json: "reporting user role is not a manager" unless (User.find_user(params[:user][:reporting_user_id]).current_role == "manager")
     end
 
     def user_role
       return Role.find_role(params[:user][:user_roles_attributes]['0'][:role_id].to_i)
     end
-
-    def role_is_admin
-      return (current_user.roles.pluck(:name).include? "admin")
-    end    
+   
 end

@@ -3,7 +3,7 @@ class Api::ReviewsController < ApplicationController
   before_action :can_give_review, only: [:create]
   
   def index
-    if current_user.current_role == "admin"
+    if role_is_admin
       render json: Review.current_quarter_reviews(current_quarter)
     else
       render json: current_user.reviews.user_current_quarter_reviews(current_quarter)
@@ -20,7 +20,7 @@ class Api::ReviewsController < ApplicationController
   def update
     if current_user.id == @review.user.reporting_user_id
       @review.update(status: params[:status])
-      send_not_approved_email_to(@review.user_id) if params[:status] == "false"
+      # send_not_approved_email_to(@review.user_id) if params[:status] == "false"
     elsif !@review.status && @review.user_id == current_user.id
       @review.update(review_params) ? (render json: @review) : (render json: send_error_messages(@review))  
     else
