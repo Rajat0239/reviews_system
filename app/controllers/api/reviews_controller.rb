@@ -20,7 +20,7 @@ class Api::ReviewsController < ApplicationController
   def update
     if current_user.id == @review.user.reporting_user_id
       @review.update(status: params[:status])
-      # send_not_approved_email_to(@review.user_id) if params[:status] == "false"
+      send_not_approved_email_to(@review.user_id) if params[:status] == "false"
     elsif !@review.status && @review.user_id == current_user.id
       @review.update(review_params) ? (render json: @review) : (render json: send_error_messages(@review))  
     else
