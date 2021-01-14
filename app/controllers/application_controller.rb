@@ -20,17 +20,12 @@ class ApplicationController < ActionController::API
     return ReviewDate.exists?(quarter: current_quarter)
   end
 
-  
-  def is_role_include_admin
-    return current_user.roles.pluck(:name).include? "admin" 
-  end
-
   def send_error_messages(field)
     field.errors.full_messages
   end
 
   def role_is_admin
-    return current_user.current_role == "admin")
+    return current_user.current_role == "admin"
   end 
 end
  
