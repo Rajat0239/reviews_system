@@ -6,20 +6,12 @@ class Api::ReviewDatesController < ApplicationController
   end
 
   def create
-    if !is_quarter_present
-      @review_date = ReviewDate.new(start_date: params[:date], deadline_date: (params[:date].to_date + 10.days), quarter: current_quarter)
-      (@review_date.save) ? (render json: "date is generated for the quarter") : (render json: @review_date.errors)
-    else
-      render json: "date is already generated for the quarter go to update"
-    end 
+    @review_date = ReviewDate.new(start_date: params[:start_date], deadline_date: params[:deadline_date], quarter: current_quarter)
+    (@review_date.save) ? (render json: "date is generated for the quarter") : (render json:  @review_date.errors[:base])
   end
 
   def update
-    if is_quarter_present
-      @review_date.update(deadline_date: params[:date]) ? (render json: "deadline is updated to #{params[:date]}") : (render json: @review_date.errors)
-    else
-      render json: "can't update the date"
-    end
+    @review_date.update(deadline_date: params[:deadline_date]) ? (render json: "deadline is updated to #{params[:deadline_date]}") : (render json: @review_date.errors[:base])
   end
 
 end

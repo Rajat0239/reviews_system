@@ -3,14 +3,14 @@ class UserMailer < ApplicationMailer
 
   def not_approved_email(user)
     @user = User.find(user)
-      #mail(to: @user.email, subject: 'Your Review Is Not Approved')
+    #mail(to: "rajat.gupta290998@gmail.com", subject: 'Your Review Is Not Approved')
   end
 
   def review_date_email(review)
     @review = review
     @user = User.where.not(current_role: "admin")
     @user.each do |e|
-      #send_individual_email(e.email).deliver
+    #send_individual_email(e.email).deliver
     end
   end
 
