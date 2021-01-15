@@ -16,14 +16,6 @@ class ApplicationController < ActionController::API
     return ((Time.now.month - 1)/3+1).to_s+" "+(Time.now.year).to_s
   end
 
-  def is_quarter_present
-    return ReviewDate.exists?(quarter: current_quarter)
-  end
-
-  def send_error_messages(field)
-    field.errors.full_messages
-  end
-
   def role_is_admin
     return current_user.current_role == "admin"
   end 

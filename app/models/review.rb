@@ -1,5 +1,5 @@
 class Review < ApplicationRecord
-  after_update :send_not_approved_email
+  include QuarterRelated
 
   validate :can_give_review, :on => [:create]
   validate :in_a_valid_date, :on => [:create, :update]
@@ -16,23 +16,15 @@ class Review < ApplicationRecord
   private 
 
     def can_give_review
-      self.quarter = current_quarter
+      self.quarter = QuarterRelated.current_quarter
       self.user_current_role = User.find(self.user_id).current_role
-      self.errors.add(:base, "you already submitted the review for this quarter go to update") if User.find(self.user_id).reviews.exists?(quarter: current_quarter)
-    end
-
-    def current_quarter
-      ((Time.now.month - 1)/3+1).to_s+" "+(Time.now.year).to_s
-    end
-
-    def send_not_approved_email
-      UserMailer.not_approved_email(self.user_id).deliver_now if self.status == false
+      self.errors.add(:base, "you already submitted the review for this quarter go to update") if User.find(self.user_id).reviews.exists?(quarter: QuarterRelated.current_quarter)
     end
 
     def in_a_valid_date
-      if ReviewDate.exists?(quarter: current_quarter)
-        @review_date = ReviewDate.find_date(current_quarter)
-        self.errors.add(:base, "review date is expired or not available") unless (@review_date.start_date .. @review_date.deadline_date).cover?(Time.now.to_date)
+      if QuarterRelated.is_quarter_present
+        @review_date = ReviewDate.find_date(QuarterRelated.current_quarter)
+        self.errors.add(:base, "review date is expired or not available") unless ( @review_date.start_date ..  @review_date.deadline_date).cover?(Time.now.to_date)
       else
         self.errors.add(:base, "review date is expired or not available")
       end

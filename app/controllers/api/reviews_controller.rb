@@ -10,14 +10,16 @@ class Api::ReviewsController < ApplicationController
 
   def create
     @review = current_user.reviews.new(review_params)
-    @review.save ? (render json: @review) : (render json: @review.errors[:base])
+    @review.save ? (render json: @review.as_json) : (render json: @review.errors)
   end
 
   def update
     if current_user.id == @review.user.reporting_user_id
       @review.update(status: params[:status])
+      send_not_approved_email
+      render :json => {:message=> "review is updated"}
     elsif !@review.status && @review.user_id == current_user.id
-      @review.update(review_params) ? (render json: @review) : (render json: send_error_messages(@review))  
+      @review.update(review_params) ? (render json: @review.as_json) : (render json: @review.errors)  
     else
       render json: "can't update this review"
     end
@@ -28,4 +30,7 @@ class Api::ReviewsController < ApplicationController
       params.require(:review).permit(:ratings, :feedback)
     end
 
+    def send_not_approved_email
+      UserMailer.not_approved_email(@review.user_id).deliver_now if params[:status] == "false"
+    end
 end

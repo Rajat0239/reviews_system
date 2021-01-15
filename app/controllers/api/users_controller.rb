@@ -9,24 +9,24 @@ class Api::UsersController < ApplicationController
     @user = User.new(user_params)
     @user.user_roles.new(role_id: user_role.id)
     @user.current_role = user_role.name
-    @user.save ? (render json: @user) : (render json: @user.erros)
+    @user.save ? (render json: @user) : (render json: @user.errors)
   end 
 
   def update
     if role_is_admin
       @user.current_role = user_role.name
-      (@user.update(update_params)) ? (render json: @user) : (render json: @user.erros)
+      (@user.update(update_params)) ? (render json: @user) : (render json: @user.errors)
     elsif current_user.id == params[:id].to_i
       current_user.update(user_own_params)
       render json: current_user.as_json(only: [:f_name, :l_name, :dob])
     else
-      render :json => {:success => false, :message=> "You can not update"}
+      render :json => {:message=> "You can not update"}
     end
   end
 
   def destroy
     @user.destroy
-    render :json => {:success => true, :message=> "User deleted"}
+    render :json => {:message=> "User deleted"}
   end
 
   private
