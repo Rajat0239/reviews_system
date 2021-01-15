@@ -7,9 +7,9 @@ class Review < ApplicationRecord
   validates :ratings, numericality: :only_integer, :inclusion => 1..5
 
   scope :find_reporting_user_id, -> (id) {find(id).user.reporting_user_id}
-  scope :current_quarter_reviews, ->(quarter) {select(:id, :ratings, :feedback).where("status = ? AND quarter = ? ", false, quarter)}
+  scope :current_quarter_reviews, ->(quarter) {select(:id, :ratings, :feedback, :status).where("status = ? AND quarter = ? ", true, quarter)}
   scope :user_current_quarter_reviews, ->(quarter) {select(:id, :ratings, :feedback)}
-
+  scope :present_quater_reviews, ->(quarter) {where(quarter: quarter)}
 
   belongs_to :user
 
@@ -18,7 +18,7 @@ class Review < ApplicationRecord
     def can_give_review
       self.quarter = QuarterRelated.current_quarter
       self.user_current_role = User.find(self.user_id).current_role
-      self.errors.add(:base, "you already submitted the review for this quarter go to update") if User.find(self.user_id).reviews.exists?(quarter: QuarterRelated.current_quarter)
+      self.errors.add(:base, "you already submitted the review for this quarter go to update") if User.find(self.user_id).reviews.exists?(quarter: self.quarter)
     end
 
     def in_a_valid_date
