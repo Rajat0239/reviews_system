@@ -3,12 +3,14 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
        
-  after_save :send_welcome_mail
+  after_create :send_welcome_mail
   
   validate :is_reporting_role_manager, :on => [:create, :update]
   validates :f_name, :l_name, :dob, :doj, :current_role, :reporting_user_id,  presence: true
 
   scope :find_user, ->(id) {find(id)}
+  scope :is_email_present, ->(email) {find_by(email: email)}
+  scope :excluding_admin, ->{where.not(current_role: "admin")}
 
   has_many :reviews, dependent: :destroy
   has_many :user_roles, dependent: :destroy 
