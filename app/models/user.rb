@@ -9,7 +9,6 @@ class User < ApplicationRecord
   validates :f_name, :l_name, :dob, :doj, :current_role, :reporting_user_id,  presence: true
 
   scope :find_user, ->(id) {find(id)}
-  scope :is_email_present, ->(email) {find_by(email: email)}
   scope :excluding_admin, ->{where.not(current_role: "admin")}
 
   has_many :reviews, dependent: :destroy

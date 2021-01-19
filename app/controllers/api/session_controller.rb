@@ -1,7 +1,9 @@
 class Api::SessionController < ApplicationController
+
   skip_load_and_authorize_resource
+  
   def create
-    @user = User.is_email_present(params[:email])
+    @user = User.find_by(email: params[:email])
     (@user&.valid_password? (params[:password])) ? (render json: @user.as_json(only: [:email, :authentication_token, :id, :current_role])) : (render json: "you have entered wrong credentials")  
   end
   

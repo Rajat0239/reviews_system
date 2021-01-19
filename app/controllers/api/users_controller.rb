@@ -1,7 +1,6 @@
 class Api::UsersController < ApplicationController
 
   def index
-    byebug
     user_listing = User.excluding_admin
     render json: user_listing.as_json(only: [:f_name, :l_name, :current_role])
   end

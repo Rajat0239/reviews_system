@@ -12,6 +12,7 @@ class ReviewDate < ApplicationRecord
   scope :date_for_quarter, -> (current_quarter) {find_by(quarter: current_quarter)}
 
   private
+  
     def check_before_create
       unless QuarterRelated.is_quarter_present
         self.quarter = QuarterRelated.current_quarter
