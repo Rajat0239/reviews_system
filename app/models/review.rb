@@ -10,6 +10,7 @@ class Review < ApplicationRecord
   scope :current_quarter_reviews, ->(quarter) {select(:id, :ratings, :feedback, :status).where("status = ? AND quarter = ? ", true, quarter)}
   scope :user_current_quarter_reviews, ->(quarter) {select(:id, :ratings, :feedback)}
   scope :present_quater_reviews, ->(quarter) {where(quarter: quarter)}
+  scope :over_all_ratings_of_user, ->(user_id) {where("quarter like ? AND user_id = ? AND status = ?","%2021",user_id,true).pluck(:ratings).sum} 
 
   belongs_to :user
 
@@ -24,7 +25,7 @@ class Review < ApplicationRecord
     def in_a_valid_date
       if QuarterRelated.is_quarter_present
         @review_date = ReviewDate.find_date(QuarterRelated.current_quarter)
-        self.errors.add(:base, "review date is expired or not available") unless ( @review_date.start_date ..  @review_date.deadline_date).cover?(Time.now.to_date)
+        self.errors.add(:base, "review date is expired or not available") unless (@review_date.start_date ..  @review_date.deadline_date).cover?(Time.now.to_date)
       else
         self.errors.add(:base, "review date is expired or not available")
       end

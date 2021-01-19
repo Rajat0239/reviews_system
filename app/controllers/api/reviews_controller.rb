@@ -2,9 +2,9 @@ class Api::ReviewsController < ApplicationController
   
   def index
     if role_is_admin
-      render json: Review.current_quarter_reviews(current_quarter)
+      render json: Review.current_quarter_reviews(current_quarter).as_json
     else
-      render json: current_user.reviews.user_current_quarter_reviews(current_quarter)
+      render json: current_user.reviews.user_current_quarter_reviews(current_quarter).as_json
     end
   end
 
@@ -26,6 +26,7 @@ class Api::ReviewsController < ApplicationController
   end
 
   private
+  
     def review_params
       params.require(:review).permit(:ratings, :feedback)
     end
