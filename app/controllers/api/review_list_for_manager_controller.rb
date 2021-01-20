@@ -14,4 +14,5 @@ class Api::ReviewListForManagerController < ApplicationController
     def validate_role
       render :json => {:message=> "Not authorised"} unless current_user.current_role == "manager"
     end
+    
 end

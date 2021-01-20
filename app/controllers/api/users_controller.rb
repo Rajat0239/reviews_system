@@ -2,7 +2,12 @@ class Api::UsersController < ApplicationController
 
   def index
     user_listing = User.excluding_admin
-    render json: user_listing.as_json(only: [:f_name, :l_name, :current_role])
+    render json: user_listing.as_json(only: [:id, :f_name, :l_name, :current_role])
+  end
+
+  def show
+    @user = User.find(params[:id])
+    render json: @user.as_json(except: [:authentication_token])
   end
 
   def create
@@ -46,4 +51,5 @@ class Api::UsersController < ApplicationController
     def user_role
       return Role.find_role(params[:user][:user_roles_attributes][0][:role_id].to_i)
     end
+    
 end

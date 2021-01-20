@@ -19,4 +19,5 @@ class Api::ReviewDatesController < ApplicationController
     def date_params
       params.permit(:start_date, :deadline_date)
     end
+    
 end
