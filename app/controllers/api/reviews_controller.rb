@@ -10,7 +10,7 @@ class Api::ReviewsController < ApplicationController
 
   def create
     @review = current_user.reviews.new(review_params)
-    @review.save ? (render json: @review.as_json) : (render json: @review.errors)
+    @review.save ? (render json: @review) : (render json: @review.errors)
   end
 
   def update
@@ -28,7 +28,7 @@ class Api::ReviewsController < ApplicationController
   private
   
     def review_params
-      params.require(:review).permit(:ratings, :feedback, :questions_for_user_id)
+      params.require(:review).permit(:ratings, :feedback, :question_id)
     end
 
     def send_not_approved_email
