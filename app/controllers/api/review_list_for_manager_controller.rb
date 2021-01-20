@@ -5,8 +5,8 @@ class Api::ReviewListForManagerController < ApplicationController
   before_action :validate_role
 
   def index
-    review = Review.joins(:user).select("users.reporting_user_id,users.f_name, reviews.ratings, reviews.feedback, reviews.user_id, reviews.status")
-    render json: review
+    @review = Review.joins(:user).where("users.reporting_user_id = ?", current_user.id).select("reviews.id, reviews.user_id, reviews.ratings, reviews.feedback, reviews.status, users.f_name, reviews.created_at, reviews.updated_at")
+    render json: @review.as_json
   end
 
   private
