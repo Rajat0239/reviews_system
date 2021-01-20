@@ -5,7 +5,7 @@ class Review < ApplicationRecord
   validate :in_a_valid_date, :on => [:create, :update]
   validates :ratings, :feedback, :quarter, :user_current_role, presence: true
   validates :ratings, numericality: :only_integer, :inclusion => 1..5
-  validates_uniqueness_of :review, :scope => [:question_id, :user_id, :quarter]
+  validates :user_id, uniqueness: { scope: [:question_id, :quarter] }
 
   scope :find_reporting_user_id, -> (id) {find(id).user.reporting_user_id}
   scope :current_quarter_reviews, ->(quarter) {select(:id, :ratings, :feedback, :status).where("status = ? AND quarter = ? ", true, quarter)}
@@ -15,14 +15,14 @@ class Review < ApplicationRecord
  
 
   belongs_to :user
-  belongs_to :questions_for_user
+  belongs_to :question
 
   private 
 
     def can_give_review
       self.quarter = QuarterRelated.current_quarter
       self.user_current_role = User.find(self.user_id).current_role
-      self.errors.add(:base, "you already submitted the review for this quarter go to update") if (User.find(self.user_id).reviews.exists?(quarter: self.quarter)) && (Review.find_by(questions_for_user_id: self.questions_for_user_id))
+      self.errors.add(:base, "you already submitted the review for this quarter go to update") if (User.find(self.user_id).reviews.exists?(quarter: self.quarter)) && (Review.find_by(question_id: self.question_id))
     end
 
     def in_a_valid_date
