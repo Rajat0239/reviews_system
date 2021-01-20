@@ -10,7 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_11_055309) do
+ActiveRecord::Schema.define(version: 2021_01_20_093303) do
+
+  create_table "questions", force: :cascade do |t|
+    t.text "question"
+    t.integer "role_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["role_id"], name: "index_questions_on_role_id"
+  end
 
   create_table "review_dates", force: :cascade do |t|
     t.string "quarter"
@@ -21,14 +29,16 @@ ActiveRecord::Schema.define(version: 2021_01_11_055309) do
   end
 
   create_table "reviews", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "questions_for_user_id"
     t.integer "ratings"
     t.text "feedback"
-    t.integer "user_id"
-    t.boolean "status", default: false
     t.string "quarter"
+    t.boolean "status", default: false
+    t.string "user_current_role"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.string "user_current_role"
+    t.index ["questions_for_user_id"], name: "index_reviews_on_questions_for_user_id"
     t.index ["user_id"], name: "index_reviews_on_user_id"
   end
 

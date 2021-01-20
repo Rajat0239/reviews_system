@@ -14,6 +14,7 @@ class User < ApplicationRecord
   has_many :reviews, dependent: :destroy
   has_many :user_roles, dependent: :destroy 
   has_many :roles, through: :user_roles
+  has_many :questions
   accepts_nested_attributes_for :user_roles, allow_destroy: true
 
   

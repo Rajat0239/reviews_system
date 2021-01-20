@@ -28,10 +28,11 @@ class Api::ReviewsController < ApplicationController
   private
   
     def review_params
-      params.require(:review).permit(:ratings, :feedback)
+      params.require(:review).permit(:ratings, :feedback, :questions_for_user_id)
     end
 
     def send_not_approved_email
       UserMailer.not_approved_email(@review.user_id).deliver_now if params[:status] == "false"
     end
+    
 end

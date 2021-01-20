@@ -4,4 +4,5 @@ class Api::RolesController < ApplicationController
     @roles = Role.all
     render json: @roles
   end
+  
 end
