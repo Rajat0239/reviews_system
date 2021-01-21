@@ -11,7 +11,7 @@ class Review < ApplicationRecord
   scope :current_quarter_reviews, ->(quarter) {select(:id, :ratings, :feedback, :status).where("status = ? AND quarter = ? ", true, quarter)}
   scope :user_current_quarter_reviews, ->(quarter) {select(:id, :ratings, :feedback)}
   scope :present_quater_reviews, ->(quarter) {where(quarter: quarter)}
-  scope :over_all_ratings_of_user, ->(user_id) {where("quarter like ? AND user_id = ? AND status = ?","%#{Date.today.year}",user_id,false).pluck(:ratings).sum}
+  scope :over_all_ratings_of_user, ->(user_id) {where("quarter like ? AND user_id = ? AND status = ?","%#{Date.today.year}",user_id,true).pluck(:ratings).sum}
  
 
   belongs_to :user
@@ -20,9 +20,10 @@ class Review < ApplicationRecord
   private 
 
     def can_give_review
+      self.errors.add(:base, "you already submitted the review for this quarter go to update") if (User.find(self.user_id).reviews.exists?(quarter: self.quarter)) && (Review.find_by(question_id: self.question_id))
+      self.errors.add(:base, "you can't review this") unless Role.find_by(name: User.find(self.user_id).current_role).id == Question.find(self.question_id).role_id
       self.quarter = QuarterRelated.current_quarter
       self.user_current_role = User.find(self.user_id).current_role
-      self.errors.add(:base, "you already submitted the review for this quarter go to update") if (User.find(self.user_id).reviews.exists?(quarter: self.quarter)) && (Review.find_by(question_id: self.question_id))
     end
 
     def in_a_valid_date

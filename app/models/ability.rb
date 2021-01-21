@@ -10,11 +10,13 @@ class Ability
       end
 
       if user_role.include? "manager"
+        can [:read], Question
         can [:update], User
         can [:create, :update, :read], Review
       end
 
       if user_role.include? "employee" 
+        can [:read], Question
         can [:update], User
         can [:create, :update, :read], Review 
       end
