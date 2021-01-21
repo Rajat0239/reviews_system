@@ -9,9 +9,9 @@ class UserMailer < ApplicationMailer
   def review_date_email(review)
     @review = review
     @user = User.where.not(current_role: "admin")
-    @user.each do |e|
-    send_individual_email(e.email).deliver
-    end
+    # @user.each do |e|
+    # send_individual_email(e.email).deliver
+    # end
   end
 
   def send_individual_email(email)
