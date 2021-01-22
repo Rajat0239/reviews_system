@@ -9,7 +9,7 @@ class Review < ApplicationRecord
 
   scope :find_reporting_user_id, -> (id) {find(id).user.reporting_user_id}
   scope :current_quarter_reviews, ->(quarter) {select(:id, :ratings, :feedback, :status).where("status = ? AND quarter = ? ", true, quarter)}
-  scope :user_current_quarter_reviews, ->(quarter) {select(:id, :ratings, :feedback)}
+  scope :current_user_current_quarter_reviews, ->(quarter) {select(:id, :ratings, :feedback)}
   scope :present_quater_reviews, ->(quarter) {where(quarter: quarter)}
   scope :over_all_ratings_of_user, ->(user_id) {where("quarter like ? AND user_id = ? AND status = ?","%#{Date.today.year}",user_id,true).pluck(:ratings).sum}
  

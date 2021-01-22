@@ -4,11 +4,12 @@ class Api::ReviewsController < ApplicationController
     if role_is_admin
       render json: Review.current_quarter_reviews(current_quarter).as_json
     else
-      render json: current_user.reviews.user_current_quarter_reviews(current_quarter).as_json
+      render json: current_user.reviews.current_user_current_quarter_reviews(current_quarter).as_json
     end
   end
 
   def create
+    byebug
     @review = current_user.reviews.new(review_params)
     @review.save ? (render json: @review) : (render json: @review.errors)
   end
