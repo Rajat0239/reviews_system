@@ -5,10 +5,10 @@ class User < ApplicationRecord
        
   after_create :send_welcome_mail
   
-  validate :is_reporting_role_manager, :on => [:create, :update]
   validates :f_name, :l_name, :dob, :doj, :current_role, :reporting_user_id,  presence: true
 
   scope :find_user, ->(id) {find(id)}
+  scope :find_user_current_role, ->(id) {find(id).current_role}
   scope :excluding_admin, ->{where.not(current_role: "admin")}
 
   has_many :reviews, dependent: :destroy
@@ -24,7 +24,4 @@ class User < ApplicationRecord
       UserMailer.send_welcome_mail(self.email).deliver_now
     end
 
-    def is_reporting_role_manager
-      self.errors.add(:base, "reporting user role is not a manager") unless User.find(self.reporting_user_id).current_role == "manager"
-    end
 end

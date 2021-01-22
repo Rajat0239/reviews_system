@@ -4,7 +4,7 @@ Rails.application.routes.draw do
     resources :session, only: [:create, :destroy]
     resources :roles, only: [:index]
     resources :reviews, only: [:create, :index, :update]
-    resources :review_dates, only: [:create, :update]
+    resources :review_dates, only: [:index, :create, :update]
     resources :review_list_for_manager, only: [:index]
     resources :goal, only: [:index]
     resources :questions, only: [:index, :create, :update]

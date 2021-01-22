@@ -1,5 +1,7 @@
 class Api::UsersController < ApplicationController
 
+  before_action :check_reporting_role , only: [:create, :update]
+
   def index
     user_listing = User.excluding_admin
     render json: user_listing.as_json(only: [:id, :f_name, :l_name, :current_role])
@@ -31,7 +33,7 @@ class Api::UsersController < ApplicationController
 
   def destroy
     @user.destroy
-    render :json => {:message=> "User deleted"}
+    render :json => {:message=> "user has been deleted"}
   end
 
   private
@@ -49,7 +51,13 @@ class Api::UsersController < ApplicationController
     end
 
     def user_role
-      return Role.find_role(params[:user][:user_roles_attributes][0][:role_id].to_i)
+      return Role.find_role(params[:user][:user_roles_attributes][0][:role_id])
     end
     
+    def check_reporting_role
+      user_current_role = User.find_user_current_role(params[:user][:reporting_user_id])
+      render json: "you are adding admin reporting role should be of admin" unless user_current_role == "admin" if user_role.name == "admin"
+      render json: "you are adding manager reporting role should be of admin" unless user_current_role == "admin" if user_role.name == "manager"
+      render json: "you are adding employee reporting role should be of manager or admin" unless user_current_role == "manager" || user_current_role == "admin" if user_role.name == "employee"
+    end
 end
