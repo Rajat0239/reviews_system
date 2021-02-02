@@ -8,7 +8,13 @@ class Api::SessionController < ApplicationController
   end
   
   def destroy
-    current_user ? (current_user.authentication_token = nil; current_user.save; render json: "you have succesfully logged Out") : (render json: "first login")    
+    if current_user 
+      current_user.authentication_token = nil 
+      current_user.save
+      render json: "you have succesfully logged out"
+    else
+      render json: "first login"
+    end    
   end
   
 end
