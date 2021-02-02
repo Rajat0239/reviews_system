@@ -3,8 +3,13 @@ class Api::UsersController < ApplicationController
   before_action :check_reporting_role , only: [:create, :update]
 
   def index
-    user_listing = User.excluding_admin
-    render json: user_listing.as_json(only: [:id, :f_name, :l_name, :current_role])
+    if role_is_admin
+      user_listing = User.excluding_admin
+      render json: user_listing.as_json(only: [:id, :f_name, :l_name, :current_role])
+    elsif current_user.current_role
+      employee_under_manager = User.employee_under_manager(current_user.id)
+      render json: employee_under_manager.as_json(only: [:id, :email, :f_name, :l_name])
+    end
   end
 
   def show
@@ -33,7 +38,7 @@ class Api::UsersController < ApplicationController
 
   def destroy
     @user.destroy
-    render :json => {:message=> "user has been deleted"}
+    render :json => {:message => "user has been deleted"}
   end
 
   private
