@@ -9,15 +9,10 @@ class Api::ReviewsController < ApplicationController
     end
   end
 
-  def show
-    @reviews = User.find(params[:id]).reviews.where(quarter: current_quarter)
-    render json: @reviews
-  end
-
   def create
-    @count = 0
+    @review_create_status = 0
     create_reviews(params[:review].values)
-    render json: "submitted successfully" if @count == 1
+    render json: "submitted successfully" if @review_create_status == 1
   end
 
   def update
@@ -25,8 +20,6 @@ class Api::ReviewsController < ApplicationController
       @review.update(status: params[:status])
       send_not_approved_email
       render :json => {:message=> "review is updated"}
-    elsif !@review.status && @review.user_id == current_user.id
-      @review.update(review_params) ? (render json: @review.as_json) : (render json: @review.errors)  
     else
       render json: "can't update this review"
     end
@@ -51,7 +44,7 @@ class Api::ReviewsController < ApplicationController
             render json: error
             raise ActiveRecord::Rollback
           else
-            @count = 1
+            @review_create_status = 1
           end
         end
       end     

@@ -4,7 +4,7 @@ class Api::SessionController < ApplicationController
   
   def create
     @user = User.find_by(email: params[:email])
-    (@user&.valid_password? (params[:password])) ? (render json: @user.as_json(only: [:email, :authentication_token, :id, :current_role])) : (render json: "you have entered wrong credentials")  
+    (@user&.valid_password? (params[:password])) ? (render json: @user.as_json(only: [:email, :authentication_token, :id, :current_role, :f_name, :l_name])) : (render json: "you have entered wrong credentials")  
   end
   
   def destroy
