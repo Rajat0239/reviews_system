@@ -6,8 +6,13 @@ class Api::FeedbackByReportingUserController < ApplicationController
   end
 
   def create
-    @feedback = current_user.feedback_by_reporting_users.new(date_params)
-    (@feedback.save) ? (render :json => {:message => "Feedback Create Successfully"}) : (render json:  @feedback.errors[:feedback_for_user_id])
+    @user = User.find(params[:feedback_for_user_id])
+    if @user.reporting_user_id == current_user.id
+      @feedback = current_user.feedback_by_reporting_users.new(date_params)
+      (@feedback.save) ? (render :json => {:message => "Feedback Create Successfully"}) : (render json:  @feedback.errors[:feedback_for_user_id])
+    else 
+    render json: "Sorry! You Con't give feedback for this User"
+    end
   end
 
   # def update
