@@ -24,7 +24,7 @@ class Api::QuestionsController < ApplicationController
   private
 
     def question_params
-      params.permit(:question, :role_id) 
+      params.permit(:question, :role_id, :question_type_id, :options)
     end
   
 end
