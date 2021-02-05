@@ -11,14 +11,15 @@ class Ability
       if user_role.include? "manager"
         can [:read], Question
         can [:update, :read, :show_reviews_of_user, :show], User
-        can [:create, :update, :read], Review
-        can [:create, :update, :read], FeedbackByReportingUser
+        can [:create, :read], Review
+        can [:create, :read], FeedbackByReportingUser
       end
 
       if user_role.include? "employee" 
         can [:read], Question
         can [:update, :show], User
-        can [:create, :update, :read], Review 
+        can [:create, :read], Review 
+        can [:read], FeedbackByReportingUser
       end
     end
   end

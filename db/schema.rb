@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_05_060528) do
+ActiveRecord::Schema.define(version: 2021_02_05_131444) do
 
   create_table "feedback_by_reporting_users", force: :cascade do |t|
     t.integer "user_id"
@@ -19,6 +19,7 @@ ActiveRecord::Schema.define(version: 2021_02_05_060528) do
     t.integer "feedback_for_user_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "status"
     t.index ["feedback_for_user_id"], name: "index_feedback_by_reporting_users_on_feedback_for_user_id"
     t.index ["user_id"], name: "index_feedback_by_reporting_users_on_user_id"
   end
