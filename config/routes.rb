@@ -7,6 +7,7 @@ Rails.application.routes.draw do
     resources :review_dates, only: [:index, :create, :update]
     resources :question_types, only: [:index]
     resources :questions, only: [:index, :create, :update]
+    resources :feedback_by_reporting_user, only: [:index, :create]
     get '/show_reviews_of_user/:id', to: 'users#show_reviews_of_user'
   end
 end
