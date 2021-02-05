@@ -1,39 +1,24 @@
 class Api::ReviewsController < ApplicationController
   
   def index
+    byebug
     if role_is_admin
-      render json: Review.current_quarter_reviews(current_quarter).as_json
+      #render json: Review.current_quarter_reviews(current_quarter).as_json
+      #Question.joins(:reviews).where("reviews.question_id = questions.id AND reviews.user_id = ? AND reviews.quarter = ?",current_user.id,current_quarter).select("questions.id, reviews.answer, questions.question")
+      render json: FeedbackByReportingUser.joins(:reviews)
     else
-      current_user_current_quarter_reviews = Question.joins(:reviews).where("reviews.question_id = questions.id AND reviews.user_id = ? AND reviews.quarter = ?",current_user.id,current_quarter).select("questions.id, reviews.ratings, reviews.feedback, questions.question")
+      current_user_current_quarter_reviews = Question.joins(:reviews).where("reviews.question_id = questions.id AND reviews.user_id = ? AND reviews.quarter = ?",current_user.id,current_quarter).select("questions.id, reviews.answer, questions.question")
       render json: current_user_current_quarter_reviews
     end
   end
 
   def create
-    @review_create_status = 0
-    create_reviews(params[:review].values)
-    render json: "submitted successfully" if @review_create_status == 1
-  end
-
-  def update
-    if current_user.id == @review.user.reporting_user_id
-      @review.update(status: params[:status])
-      send_not_approved_email
-      render :json => {:message=> "review is updated"}
-    else
-      render json: "can't update this review"
-    end
+    @review_create_status = true
+    create_reviews(params[:reviews].values)
+    render json: "submitted successfully" if @review_create_status == true
   end
 
   private
-  
-    def review_params
-      params.permit(review_attributes: [:ratings, :feedback, :question_id])
-    end
-  
-    def send_not_approved_email
-      UserMailer.not_approved_email(@review.user_id).deliver_now if params[:status] == "false"
-    end
     
     def create_reviews(array_of_data)
       current_user.reviews.transaction do
@@ -42,9 +27,8 @@ class Api::ReviewsController < ApplicationController
           unless new_review.save
             error = new_review.errors.full_messages - ["User has already been taken"]
             render json: error
+            @review_create_status = false
             raise ActiveRecord::Rollback
-          else
-            @review_create_status = 1
           end
         end
       end     

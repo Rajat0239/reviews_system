@@ -31,7 +31,7 @@ class ReviewDate < ApplicationRecord
     end
     
     def validate_both_date
-      self.errors.add(:base, "deadline date is invalid") unless QuarterRelated.current_quarter == QuarterRelated.quarter_related_to_date(self.deadline_date) && (self.deadline_date > self.start_date)
+      self.errors.add(:base, "deadline date is invalid") unless QuarterRelated.current_quarter == QuarterRelated.quarter_related_to_date(self.deadline_date) && (self.deadline_date > self.start_date) && self.deadline_date > Date.today
       start_date = ReviewDate.find_by(quarter: QuarterRelated.current_quarter)
       if start_date && start_date.start_date < Date.today
         self.start_date = start_date.start_date
