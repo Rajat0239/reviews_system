@@ -6,6 +6,18 @@ class UserMailer < ApplicationMailer
     mail(to: @user.email, subject: 'Your Review Is Not Approved')
   end
 
+  def reprting_feedback_email(feedback)
+    @employee = User.find(feedback.user_id)
+    @reporter = User.find(feedback.feedback_for_user_id)
+    @admin = User.find_by(current_role:"admin")
+    mail(to: @admin.email, subject: "Manager give feedback for employee respected review please check!")
+  end
+
+  def employee_feedback_acknowledgement_mail(feedback_data)
+    @employee_data = User.find(feedback_data.user_id)
+    mail(to: @employee_data.email, subject: "Feedback for your respected review's please check!")
+  end
+
   def review_date_email(review)
     @review = review
     @user = User.where.not(current_role: "admin")
