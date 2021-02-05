@@ -12,6 +12,7 @@ class Ability
         can [:read], Question
         can [:update, :read, :show_reviews_of_user, :show], User
         can [:create, :update, :read], Review
+        can [:create, :update, :read], FeedbackByReportingUser
       end
 
       if user_role.include? "employee" 
