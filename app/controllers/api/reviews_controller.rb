@@ -1,15 +1,10 @@
 class Api::ReviewsController < ApplicationController
   
+  before_action :all_question_mendatory
+
   def index
-    byebug
-    if role_is_admin
-      #render json: Review.current_quarter_reviews(current_quarter).as_json
-      #Question.joins(:reviews).where("reviews.question_id = questions.id AND reviews.user_id = ? AND reviews.quarter = ?",current_user.id,current_quarter).select("questions.id, reviews.answer, questions.question")
-      render json: FeedbackByReportingUser.joins(:reviews)
-    else
-      current_user_current_quarter_reviews = Question.joins(:reviews).where("reviews.question_id = questions.id AND reviews.user_id = ? AND reviews.quarter = ?",current_user.id,current_quarter).select("questions.id, reviews.answer, questions.question")
-      render json: current_user_current_quarter_reviews
-    end
+    current_user_current_quarter_reviews = Question.joins(:reviews).where("reviews.question_id = questions.id AND reviews.user_id = ? AND reviews.quarter = ?",current_user.id,current_quarter).select("questions.id, reviews.answer, questions.question")
+    render json: current_user_current_quarter_reviews
   end
 
   def create
@@ -32,6 +27,10 @@ class Api::ReviewsController < ApplicationController
           end
         end
       end     
+    end
+
+    def all_question_mendatory
+      render json: "all the questions are mendatory" unless params[:reviews].values.count == Role.find_by(name: current_user.current_role).questions.count
     end
 
 end
