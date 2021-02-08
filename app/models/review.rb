@@ -17,7 +17,7 @@ class Review < ApplicationRecord
     def can_give_review
       self.quarter = QuarterRelated.current_quarter
       self.user_current_role = User.find(self.user_id).current_role
-      self.errors.add(:base, "you have submitted review for this question (#{Question.find(self.question_id).question})")  if Review.exists?(question_id: self.question_id, quarter: QuarterRelated.current_quarter)
+      self.errors.add(:base, "you have submitted review for this question (#{Question.find(self.question_id).question})")  if Review.exists?(question_id: self.question_id, quarter: QuarterRelated.current_quarter, user_id: self.user_id)
       self.errors.add(:base, "this is not your question (#{Question.find(self.question_id).question})") unless Role.find_by(name: User.find(self.user_id).current_role).id == Question.find(self.question_id).role_id
     end
 
