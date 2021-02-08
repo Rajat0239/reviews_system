@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_05_131444) do
+ActiveRecord::Schema.define(version: 2021_02_08_073728) do
 
   create_table "feedback_by_reporting_users", force: :cascade do |t|
     t.integer "user_id"
@@ -24,20 +24,12 @@ ActiveRecord::Schema.define(version: 2021_02_05_131444) do
     t.index ["user_id"], name: "index_feedback_by_reporting_users_on_user_id"
   end
 
-  create_table "question_types", force: :cascade do |t|
-    t.string "q_type"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-  end
-
   create_table "questions", force: :cascade do |t|
     t.text "question"
     t.integer "role_id"
-    t.integer "question_type_id"
-    t.string "options"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["question_type_id"], name: "index_questions_on_question_type_id"
+    t.string "type"
     t.index ["role_id"], name: "index_questions_on_role_id"
   end
 
@@ -68,6 +60,7 @@ ActiveRecord::Schema.define(version: 2021_02_05_131444) do
   create_table "user_roles", force: :cascade do |t|
     t.integer "role_id"
     t.integer "user_id"
+    t.string "name"
     t.index ["role_id"], name: "index_user_roles_on_role_id"
     t.index ["user_id"], name: "index_user_roles_on_user_id"
   end
@@ -84,14 +77,13 @@ ActiveRecord::Schema.define(version: 2021_02_05_131444) do
     t.datetime "remember_created_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.string "authentication_token"
     t.string "current_role"
+    t.string "authentication_token", limit: 30
     t.integer "reporting_user_id"
-    t.index ["authentication_token"], name: "index_users_on_authentication_token"
+    t.index ["authentication_token"], name: "index_users_on_authentication_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
   add_foreign_key "feedback_by_reporting_users", "users", column: "feedback_for_user_id"
-  add_foreign_key "reviews", "reporting_uesr_feedbacks", column: "user_id"
 end
