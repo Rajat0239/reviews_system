@@ -36,7 +36,7 @@ class Api::ReviewsController < ApplicationController
     end
 
     def all_question_mendatory
-      render json: "all the questions are mendatory" unless params[:reviews].values.count == Role.find_by(name: current_user.current_role).questions.count
+      render json: "all the questions are mendatory " unless params[:reviews].values.count == Role.find_by(name: current_user.current_role).questions.count
     end
 
 end
