@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_05_131444) do
+ActiveRecord::Schema.define(version: 2021_02_08_105816) do
 
   create_table "feedback_by_reporting_users", force: :cascade do |t|
     t.integer "user_id"
@@ -39,6 +39,15 @@ ActiveRecord::Schema.define(version: 2021_02_05_131444) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["question_type_id"], name: "index_questions_on_question_type_id"
     t.index ["role_id"], name: "index_questions_on_role_id"
+  end
+
+  create_table "ratings_of_user_for_himselves", force: :cascade do |t|
+    t.integer "user_id"
+    t.string "quarter"
+    t.integer "ratings"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_ratings_of_user_for_himselves_on_user_id"
   end
 
   create_table "review_dates", force: :cascade do |t|
@@ -93,5 +102,4 @@ ActiveRecord::Schema.define(version: 2021_02_05_131444) do
   end
 
   add_foreign_key "feedback_by_reporting_users", "users", column: "feedback_for_user_id"
-  add_foreign_key "reviews", "reporting_uesr_feedbacks", column: "user_id"
 end

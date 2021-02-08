@@ -45,10 +45,9 @@ class Api::UsersController < ApplicationController
   end
 
   def show_reviews_of_user
-    if current_user.current_role == "manager"
-      @reviews = Question.joins(:reviews).where("reviews.question_id = questions.id AND reviews.user_id = ? AND reviews.quarter = ?",params[:id],current_quarter).select("questions.id, reviews.ratings, reviews.feedback, questions.question")
-      render json: @reviews
-    end
+    @reviews = Question.joins(:reviews).where("reviews.question_id = questions.id AND reviews.user_id = ? AND reviews.quarter = ?",params[:id],current_quarter).select("questions.id, questions.question, reviews.answer")
+    @ratings = User.find(params[:id]).ratings_of_user_for_himselves.find_by(quarter: current_quarter).ratings
+    render json: @reviews.to_a.push({"ratings": @ratings})
   end
 
   private
