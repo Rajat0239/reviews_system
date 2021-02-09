@@ -14,8 +14,7 @@ class Api::UsersController < ApplicationController
 
   def show
     if role_is_admin
-      user_info = User.joins(:roles).where("users.id = ? AND roles.name = ?",params[:id],current_role_of_user).select("users.f_name, roles.id") 
-      render json: user_info.to_aparams[:review].values
+      render json: user_data_for_admin
     else
       render json: current_user.as_json(only: [:f_name,:l_name,:dob])
     end
@@ -47,7 +46,7 @@ class Api::UsersController < ApplicationController
   def show_reviews_of_user
     @reviews = Question.joins(:reviews).where("reviews.question_id = questions.id AND reviews.user_id = ? AND reviews.quarter = ?",params[:id],current_quarter).select("questions.id, questions.question, reviews.answer")
     @ratings = User.find(params[:id]).ratings_of_user_for_himselves.find_by(quarter: current_quarter).ratings
-    render json: @reviews.to_a.push({"ratings": @ratings})
+    render json: @reviews.to_a.push({"ratings": @ratings},{"user_id": params[:id]})
   end
 
   private
@@ -73,5 +72,10 @@ class Api::UsersController < ApplicationController
       render json: "you are adding admin reporting role should be of admin" unless user_current_role == "admin" if user_role == "admin"
       render json: "you are adding manager reporting role should be of admin" unless user_current_role == "admin" if user_role == "manager"
       render json: "you are adding employee reporting role should be of manager or admin" unless user_current_role == "manager" || user_current_role == "admin" if user_role == "employee"
+    end
+
+    def user_data_for_admin
+      role = Role.find_by(name: @user.current_role).id
+      @user.as_json(only:[:id,:f_name,:l_name,:dob,:doj,:reporting_user_id]).merge("role" => role)
     end
 end

@@ -5,13 +5,17 @@ class Api::ReviewsController < ApplicationController
   def index
     @current_user_current_quarter_reviews = Question.joins(:reviews).where("reviews.question_id = questions.id AND reviews.user_id = ? AND reviews.quarter = ?",current_user.id,current_quarter).select("questions.id, reviews.answer, questions.question")
     @ratings = current_user.ratings_of_user_for_himselves.find_by(quarter: current_quarter).ratings
-    render json: @current_user_current_quarter_reviews.to_a.push({"ratings": ratings})
+    render json: @current_user_current_quarter_reviews.to_a.push({"ratings": @ratings})
   end
 
   def create
     @error = create_reviews(params[:reviews].values,params[:ratings])
-    @message = error.present? ? @error : "submitted successfully"
-    render json: @message
+    unless @error.present?
+      send_email_to_reporting_user
+      render json: "submitted successfully"
+    else
+      render json: @error 
+    end
   end
 
   private
@@ -39,4 +43,7 @@ class Api::ReviewsController < ApplicationController
       render json: "all the questions are mendatory " unless params[:reviews].values.count == Role.find_by(name: current_user.current_role).questions.count
     end
 
+    def send_email_to_reporting_user
+      UserMailer.send_email_to_reporting_user(current_user).deliver
+    end
 end
