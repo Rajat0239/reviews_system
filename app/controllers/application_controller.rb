@@ -19,5 +19,9 @@ class ApplicationController < ActionController::API
   def role_is_admin
     return current_user.current_role == "admin"
   end 
+
+  def role_is_manager
+    return current_user.current_role == "manager"
+  end 
 end
  

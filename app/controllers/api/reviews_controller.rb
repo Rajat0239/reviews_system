@@ -5,7 +5,7 @@ class Api::ReviewsController < ApplicationController
   def index
     @current_user_current_quarter_reviews = Question.joins(:reviews).where("reviews.question_id = questions.id AND reviews.user_id = ? AND reviews.quarter = ?",current_user.id,current_quarter).select("questions.id, reviews.answer, questions.question")
     @ratings = current_user.ratings_of_user_for_himselves.find_by(quarter: current_quarter).ratings
-    render json: @current_user_current_quarter_reviews.to_a.push({"ratings": ratings})
+    render json: @current_user_current_quarter_reviews.to_a.push({"ratings": @ratings})
   end
 
   def create
