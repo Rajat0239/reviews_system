@@ -23,6 +23,7 @@ class Api::UsersController < ApplicationController
 
   def create
     @user = User.new(user_params)
+    byebug
     @user.current_role = user_role
     @user.save ? (render json: @user) : (render json: @user.errors)
   end 
