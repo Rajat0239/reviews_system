@@ -44,9 +44,13 @@ class Api::UsersController < ApplicationController
   end
 
   def show_reviews_of_user
-    @reviews = Question.joins(:reviews).where("reviews.question_id = questions.id AND reviews.user_id = ? AND reviews.quarter = ?",params[:id],current_quarter).select("questions.id, questions.question, reviews.answer")
-    @ratings = User.find(params[:id]).ratings_of_user_for_himselves.find_by(quarter: current_quarter).ratings
-    render json: @reviews.to_a.push({"ratings": @ratings},{"user_id": params[:id]})
+    @reviews = Question.joins(:reviews).where("reviews.question_id = questions.id AND reviews.user_id = ? AND reviews.quarter = ?",params[:user_id],current_quarter).select("questions.id, questions.question, reviews.answer")
+    unless @reviews.empty?
+      @ratings = User.find(params[:user_id]).ratings_of_user_for_himselves.find_by(quarter: current_quarter).ratings
+      render json: @reviews.to_a.push({"ratings": @ratings},{"user_id": params[:user_id]})
+    else 
+      render json: "review is not available for this user"
+    end
   end
 
   private
