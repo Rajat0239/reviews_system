@@ -3,18 +3,14 @@ class Api::FeedbackByReportingUsersController < ApplicationController
   before_action :check_review_of_user, only: [:create]
   
   def show
-    feedback_list = []
     if role_is_admin
-       feedbacks = FeedbackByReportingUser.includes(:user).where(feedback_for_user_id:params[:feedback_for_user_id],quarter:current_quarter)
+      feedbacks = FeedbackByReportingUser.find_by(feedback_for_user_id:params[:feedback_for_user_id],quarter:current_quarter)
     elsif role_is_manager  
-          feedbacks = current_user.feedback_by_reporting_users.includes(:user).where(feedback_for_user_id:params[:feedback_for_user_id],quarter:current_quarter)
+      feedbacks = current_user.feedback_by_reporting_users.find_by(feedback_for_user_id:params[:feedback_for_user_id],quarter:current_quarter)
     else
-        feedbacks = FeedbackByReportingUser.where(feedback_for_user_id:current_user.id, quarter:current_quarter, status:"true")
+      feedbacks = FeedbackByReportingUser.find_by(feedback_for_user_id:current_user.id, quarter:current_quarter, status:"true")
     end
-      feedbacks.each { |feedback|
-                        feedback_list << feedback.attributes.merge(user: feedback.user)
-                     }
-      (feedback_list.empty?) ? (render :json => {:message => "Sorry! feedback not available"}) : (render json: feedback_list) 
+      (feedbacks.nil?) ? (render :json => {:message => "Sorry! feedback not available"}) : (render json: feedbacks) 
   end
   
   def create
