@@ -17,7 +17,7 @@ class Api::ReviewDatesController < ApplicationController
   private
   
     def date_params
-      params.permit(:start_date, :deadline_date)
+      params.require(:review_dates).permit(:start_date, :deadline_date)
     end
     
 end

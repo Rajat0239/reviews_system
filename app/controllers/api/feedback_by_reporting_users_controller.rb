@@ -33,6 +33,7 @@ class Api::FeedbackByReportingUsersController < ApplicationController
   end
 
   private
+  
     def date_params
       params.require(:feedback_by_reporting_users).permit(:feedback, :feedback_for_user_id, :status)
     end

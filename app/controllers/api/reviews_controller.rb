@@ -10,8 +10,12 @@ class Api::ReviewsController < ApplicationController
 
   def create
     @error = create_reviews(params[:reviews].values,params[:ratings])
-    @message = error.present? ? @error : "submitted successfully"
-    render json: @message
+    unless @error.present?
+      send_email_to_reporting_user
+      render json: "submitted successfully"
+    else
+      render json: @error 
+    end
   end
 
   private
@@ -39,4 +43,7 @@ class Api::ReviewsController < ApplicationController
       render json: "all the questions are mendatory " unless params[:reviews].values.count == Role.find_by(name: current_user.current_role).questions.count
     end
 
+    def send_email_to_reporting_user
+      UserMailer.send_email_to_reporting_user(current_user).deliver
+    end
 end

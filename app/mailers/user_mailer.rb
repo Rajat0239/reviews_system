@@ -33,4 +33,10 @@ class UserMailer < ApplicationMailer
   def send_welcome_mail(email)
     #mail(to: email, subject: 'Welcome')
   end
+
+  def send_email_to_reporting_user(user)
+    @user = user
+    email = User.find(user.reporting_user_id).email
+    #mail(to: email, subject: 'review submission by employee')
+  end
 end
