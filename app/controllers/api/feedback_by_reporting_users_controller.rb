@@ -3,26 +3,22 @@ class Api::FeedbackByReportingUsersController < ApplicationController
   before_action :check_review_of_user, only: [:create]
   
   def show
-    feedback_list = []
     if role_is_admin
-       feedbacks = FeedbackByReportingUser.includes(:user).where(feedback_for_user_id:params[:feedback_for_user_id],quarter:current_quarter)
-    elsif role_is_manager  
-          feedbacks = current_user.feedback_by_reporting_users.includes(:user).where(feedback_for_user_id:params[:feedback_for_user_id],quarter:current_quarter)
+      @feedback = FeedbackByReportingUser.find_by(feedback_for_user_id:params[:feedback_for_user_id],quarter:current_quarter)
+    elsif role_is_manager
+      @feedback = current_user.feedback_by_reporting_users.find_by(feedback_for_user_id:params[:feedback_for_user_id],quarter:current_quarter)
     else
-        feedbacks = FeedbackByReportingUser.where(feedback_for_user_id:current_user.id, quarter:current_quarter, status:"true")
+      @feedback = FeedbackByReportingUser.find_by(feedback_for_user_id:current_user.id, quarter:current_quarter, status:"true")
     end
-      feedbacks.each { |feedback|
-                        feedback_list << feedback.attributes.merge(user: feedback.user)
-                     }
-      (feedback_list.empty?) ? (render :json => {:message => "Sorry! feedback not available"}) : (render json: feedback_list) 
+      (@feedback.nil?) ? (render :json => {:message => "Sorry! feedback not available"}) : (render json: @feedback.as_json(only: [:id, :user_id, :feedback, :feedback_for_user_id]))
   end
   
   def create
     @user = User.find(params[:feedback_by_reporting_users][:feedback_for_user_id])
     if @user.reporting_user_id == current_user.id
-       @feedback = current_user.feedback_by_reporting_users.new(date_params)
-       @feedback.quarter = current_quarter
-      (@feedback.save) ? (render :json => {:message => "Feedback create successfully"}; UserMailer.reprting_feedback_email(@feedback).deliver_now) : (render json:  @feedback.errors[:feedback_for_user_id])     
+      @feedback = current_user.feedback_by_reporting_users.new(date_params)
+      @feedback.quarter = current_quarter
+      (@feedback.save) ? (render :json => {:message => "Feedback created successfully"}; UserMailer.reprting_feedback_email(@feedback).deliver_now) : (render json:  @feedback.errors[:feedback_for_user_id])     
     else 
       render json: "Sorry! you can't give feedback for this user"
     end

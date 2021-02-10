@@ -4,7 +4,7 @@ class Api::QuestionsController < ApplicationController
 
   def index
     if role_is_admin
-      render json: Question.all 
+      render json: Role.joins("INNER JOIN questions ON roles.id = questions.role_id INNER JOIN question_types on questions.question_type_id = question_types.id").select("questions.id, roles.name, questions.question, question_types.q_type, questions.options") 
     else
       @role_id = Role.find_by(name: current_user.current_role).id
       @questions = Question.where(role_id: @role_id)

@@ -12,7 +12,7 @@ class Question < ApplicationRecord
   has_many :reviews
 
   def set_options_nill_if_q_type_is_feedback
-    self.options = nil if (self.question_type.q_type == "feedback" || self.question_type.q_type == "true-false") if @@question_valid_status == true
+    self.options = nil if (self.question_type.q_type == "text" || self.question_type.q_type == "true-false") if @@question_valid_status == true
   end
 
   def if_options_are?
