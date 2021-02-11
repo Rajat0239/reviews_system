@@ -11,6 +11,8 @@ class Review < ApplicationRecord
 
   belongs_to :user
   belongs_to :question
+  has_many :feedback_by_reporting_users, dependent: :destroy
+
 
   private 
 

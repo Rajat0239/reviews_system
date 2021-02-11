@@ -10,17 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_08_105816) do
+ActiveRecord::Schema.define(version: 2021_02_11_070510) do
 
   create_table "feedback_by_reporting_users", force: :cascade do |t|
+    t.integer "review_id"
     t.integer "user_id"
+    t.integer "feedback_for_user_id"
     t.text "feedback"
     t.string "quarter"
-    t.integer "feedback_for_user_id"
+    t.string "status"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.string "status"
     t.index ["feedback_for_user_id"], name: "index_feedback_by_reporting_users_on_feedback_for_user_id"
+    t.index ["review_id"], name: "index_feedback_by_reporting_users_on_review_id"
     t.index ["user_id"], name: "index_feedback_by_reporting_users_on_user_id"
   end
 
@@ -77,6 +79,7 @@ ActiveRecord::Schema.define(version: 2021_02_08_105816) do
   create_table "user_roles", force: :cascade do |t|
     t.integer "role_id"
     t.integer "user_id"
+    t.string "name"
     t.index ["role_id"], name: "index_user_roles_on_role_id"
     t.index ["user_id"], name: "index_user_roles_on_user_id"
   end
@@ -93,13 +96,14 @@ ActiveRecord::Schema.define(version: 2021_02_08_105816) do
     t.datetime "remember_created_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.string "authentication_token"
     t.string "current_role"
+    t.string "authentication_token", limit: 30
     t.integer "reporting_user_id"
-    t.index ["authentication_token"], name: "index_users_on_authentication_token"
+    t.index ["authentication_token"], name: "index_users_on_authentication_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "feedback_by_reporting_users", "users"
   add_foreign_key "feedback_by_reporting_users", "users", column: "feedback_for_user_id"
 end
