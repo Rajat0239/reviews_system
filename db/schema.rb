@@ -10,17 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_11_060822) do
+ActiveRecord::Schema.define(version: 2021_02_11_062559) do
 
   create_table "feedback_by_reporting_users", force: :cascade do |t|
+    t.integer "review_id"
     t.integer "user_id"
+    t.integer "feedback_for_user_id"
     t.text "feedback"
     t.string "quarter"
-    t.integer "feedback_for_user_id"
+    t.string "status"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.string "status"
     t.index ["feedback_for_user_id"], name: "index_feedback_by_reporting_users_on_feedback_for_user_id"
+    t.index ["review_id"], name: "index_feedback_by_reporting_users_on_review_id"
     t.index ["user_id"], name: "index_feedback_by_reporting_users_on_user_id"
   end
 
