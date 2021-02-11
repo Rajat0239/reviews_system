@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_08_105816) do
+ActiveRecord::Schema.define(version: 2021_02_11_060822) do
 
   create_table "feedback_by_reporting_users", force: :cascade do |t|
     t.integer "user_id"
@@ -41,13 +41,16 @@ ActiveRecord::Schema.define(version: 2021_02_08_105816) do
     t.index ["role_id"], name: "index_questions_on_role_id"
   end
 
-  create_table "ratings_of_user_for_himselves", force: :cascade do |t|
+  create_table "ratings", force: :cascade do |t|
     t.integer "user_id"
     t.string "quarter"
-    t.integer "ratings"
+    t.integer "ratings_by_user"
+    t.integer "reporting_user_id"
+    t.integer "ratings_by_reporting_user", default: 1
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["user_id"], name: "index_ratings_of_user_for_himselves_on_user_id"
+    t.index ["reporting_user_id"], name: "index_ratings_on_reporting_user_id"
+    t.index ["user_id"], name: "index_ratings_on_user_id"
   end
 
   create_table "review_dates", force: :cascade do |t|
@@ -102,4 +105,5 @@ ActiveRecord::Schema.define(version: 2021_02_08_105816) do
   end
 
   add_foreign_key "feedback_by_reporting_users", "users", column: "feedback_for_user_id"
+  add_foreign_key "ratings", "users", column: "reporting_user_id"
 end

@@ -20,7 +20,7 @@ class Question < ApplicationRecord
   end
 
   def check_question_is_for_valid_user
-    self.errors.add(:base, "can't add question for admin") if self.role.name == "admin"
+    self.errors.add(:base, "can't add question for admin") if self.role&.name == "admin"
   end
 
   def check_valid_question_id

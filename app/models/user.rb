@@ -17,7 +17,7 @@ class User < ApplicationRecord
   has_many :roles, through: :user_roles
   has_many :questions
   has_many :feedback_by_reporting_users
-  has_many :ratings_of_user_for_himselves
+  has_many :ratings
   accepts_nested_attributes_for :user_roles, allow_destroy: true
 
   
