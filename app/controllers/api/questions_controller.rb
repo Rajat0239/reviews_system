@@ -11,7 +11,7 @@ class Api::QuestionsController < ApplicationController
       render json: @questions
     end
   end
-
+  
   def create
     @question = Question.new(question_params)
     @question.save ? (render json: @question.as_json) : (render json: @question.errors.messages)
