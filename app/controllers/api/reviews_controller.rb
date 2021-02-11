@@ -13,7 +13,6 @@ class Api::ReviewsController < ApplicationController
   end
 
   def create
-    byebug
     @error = create_reviews(params[:reviews],params[:ratings])
     unless @error.present?
       send_email_to_reporting_user
