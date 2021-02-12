@@ -1,15 +1,47 @@
 class Api::FeedbackByReportingUsersController < ApplicationController
   before_action :check_review_of_user, only: [:create]
+  # def show
+  #   if role_is_admin
+  #     @feedback = FeedbackByReportingUser.where(feedback_for_user_id:params[:feedback_for_user_id],quarter:current_quarter)
+
+  #   elsif role_is_manager
+  #     @feedback = current_user.feedback_by_reporting_users.where(feedback_for_user_id:params[:feedback_for_user_id],quarter:current_quarter)
+  #   else
+  #     @feedback = FeedbackByReportingUser.where(feedback_for_user_id:current_user.id, quarter:current_quarter, status:"true")
+  #   end
+  #     (@feedback.empty?) ? (render :json => {:message => "Sorry! feedback is not available"}) : (render json: @feedback.as_json(only: [:id, :user_id, :feedback, :feedback_for_user_id]))
+  # end
+
+
   def show
+    @feedback_list = []
     if role_is_admin
+      @ratings = Rating.where(user_id:params[:feedback_for_user_id],quarter:current_quarter)
       @feedback = FeedbackByReportingUser.where(feedback_for_user_id:params[:feedback_for_user_id],quarter:current_quarter)
+      @feedback_list = {"ratings" => @ratings,
+                        "feedbacks" => @feedback} 
+       
+      (@feedback_list.empty?) ? (render :json => {:message => "Sorry! feedback is not available"}) : (render json: @feedback_list.as_json)
+
     elsif role_is_manager
       @feedback = current_user.feedback_by_reporting_users.where(feedback_for_user_id:params[:feedback_for_user_id],quarter:current_quarter)
+      @ratings = Rating.where(user_id:params[:feedback_for_user_id],quarter:current_quarter)
+      @feedback_list = {"ratings" => @ratings,
+                        "feedbacks" => @feedback} 
+       
+      (@feedback_list.empty?) ? (render :json => {:message => "Sorry! feedback is not available"}) : (render json: @feedback_list.as_json)
     else
-      @feedback = FeedbackByReportingUser.where(feedback_for_user_id:current_user.id, quarter:current_quarter, status:"true")
+      @feedback = FeedbackByReportingUser.where(feedback_for_user_id:current_user.id, quarter:current_quarter)
+      @ratings = Rating.where(user_id:params[:feedback_for_user_id],quarter:current_quarter,status:"true")
+      @feedback_list = {"ratings" => @ratings,
+                        "feedbacks" => @feedback} 
+       
+      (@feedback_list.empty?) ? (render :json => {:message => "Sorry! feedback is not available"}) : (render json: @feedback_list.as_json)
     end
-      (@feedback.empty?) ? (render :json => {:message => "Sorry! feedback is not available"}) : (render json: @feedback.as_json(only: [:id, :user_id, :feedback, :feedback_for_user_id]))
+
+      
   end
+
   
   def create
     @error = create_feedbacks(params[:feedback_by_reporting_users])
