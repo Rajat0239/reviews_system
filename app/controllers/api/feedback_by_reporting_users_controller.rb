@@ -10,6 +10,9 @@ class Api::FeedbackByReportingUsersController < ApplicationController
     end
       (@feedback.empty?) ? (render :json => {:message => "Sorry! feedback is not available"}) : (render json: @feedback.as_json(only: [:id, :user_id, :feedback, :feedback_for_user_id]))
   end
+
+ 
+
   def create
     @error = create_feedbacks(params[:feedback_by_reporting_users])
     unless @error.present?
