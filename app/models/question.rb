@@ -5,7 +5,7 @@ class Question < ApplicationRecord
   validate :check_valid_question_id, :set_options_nill_if_q_type_is_feedback, :check_question_is_for_valid_user, :on => [:create]
   validates :options, presence: true, if: :if_options_are?
   validates :question, :role_id, presence: true 
-  validates_uniqueness_of :question, :scope => [:question, :role_id]
+  validates_uniqueness_of :question, :scope => [:role_id]
 
   belongs_to :role
   belongs_to :question_type

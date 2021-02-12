@@ -8,23 +8,23 @@ class Api::QuestionsController < ApplicationController
     else
       @role_id = Role.find_by(name: current_user.current_role).id
       @questions = Question.where(role_id: @role_id)
-      render json: @questions
+      render json: @questions.as_json(only: [:id, :question, :options])
     end
   end
   
   def create
     @question = Question.new(question_params)
-    @question.save ? (render json: @question.as_json) : (render json: @question.errors.messages)
+    @question.save ? (render :json => {:message => "question created successfully"}) : (render json: @question.errors.messages)
   end
 
   def update
-    @question.update(question_params) ? (render json: @question) : (render json: @question)
+    @question.update(question_params) ? (render :json => {:message => "question updated successfully"}) : (render json: @question)
   end
 
   private
 
     def question_params
-      params.permit(:question, :role_id, :question_type_id, :options)
+      params.permit(:question, :role_id, :question_type_id, :options, :id)
     end
   
 end

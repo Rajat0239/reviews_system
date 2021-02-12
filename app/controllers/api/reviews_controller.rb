@@ -35,7 +35,6 @@ class Api::ReviewsController < ApplicationController
         array_of_data.map do |data|
           @new_review = current_user.reviews.new(data.as_json)
           unless @new_review.save
-
             error = @new_review.errors.full_messages - ["User has already been taken"]
             raise ActiveRecord::Rollback
           end

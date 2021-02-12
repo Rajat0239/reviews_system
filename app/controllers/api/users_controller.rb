@@ -1,6 +1,6 @@
 class Api::UsersController < ApplicationController
 
-  before_action :check_reporting_role , only: [:create, :update]
+  before_action :check_reporting_role , only: [:create]
 
   def index
     if role_is_admin
@@ -16,7 +16,7 @@ class Api::UsersController < ApplicationController
     if role_is_admin
       render json: user_data_for_admin
     else
-      render json: current_user.as_json(only: [:f_name,:l_name,:dob])
+      render json: current_user.as_json(only: [:email,:f_name,:l_name,:dob,:doj])
     end
   end
 
@@ -28,11 +28,15 @@ class Api::UsersController < ApplicationController
 
   def update
     if role_is_admin
-      @user.current_role = user_role
-      (@user.update(update_params_when_admin)) ? (render json: @user) : (render json: @user.errors)
+      if Role.find(params[:id]).name == "admin"
+        @user.update(update_admin) ? (render :json => {:message => "updated successfully"}) : (render json: @user.errors)
+      else
+        check_reporting_role
+        @user.current_role = user_role
+        @user.update(update_params_when_admin) ? (render :json => {:message => "updated successfully"}) : (render json: @user.errors)
+      end
     elsif current_user.id == params[:id].to_i
-      current_user.update(user_own_params)
-      render json: current_user.as_json(only: [:f_name, :l_name, :dob])
+      current_user.update(user_own_params) ? (render :json => {:message => "updated successfully"}) : (render :json => @current_user.errors)
     else
       render :json => {:message=> "You can not update"}
     end
@@ -40,7 +44,7 @@ class Api::UsersController < ApplicationController
 
   def destroy
     @user.destroy
-    render :json => {:message => "user has been deleted"}
+    render :json => {:message => "user has been removed"}
   end
 
   def show_reviews_of_user
@@ -63,12 +67,16 @@ class Api::UsersController < ApplicationController
       params.require(:user).permit(:f_name, :l_name, :dob, :doj, :reporting_user_id, {user_roles_attributes: [:id, :role_id]})
     end
 
+    def update_admin
+      params.require(:user).permit(:password, :f_name, :l_name, :dob)
+    end
+
     def user_own_params
       params.require(:user).permit(:password, :f_name, :l_name, :dob)
     end
 
     def user_role
-      return Role.find_role(params[:user][:user_roles_attributes][0][:role_id])
+      return Role.find_role(params[:user][:user_roles_attributes][1][:role_id])
     end
     
     def check_reporting_role
@@ -80,6 +88,6 @@ class Api::UsersController < ApplicationController
 
     def user_data_for_admin
       role = Role.find_by(name: @user.current_role).id
-      @user.as_json(only:[:id,:f_name,:l_name,:dob,:doj,:reporting_user_id]).merge("role" => role)
+      @user.as_json(only:[:id,:email,:f_name,:l_name,:dob,:doj,:reporting_user_id]).merge("role" => role)
     end
 end
