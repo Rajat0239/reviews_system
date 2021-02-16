@@ -13,6 +13,8 @@ class Ability
         can [:update, :read, :show_reviews_of_user, :show], User
         can [:create, :read], Review
         can [:create, :read], FeedbackByReportingUser
+        can [:read], QuestionForUser
+        
       end
 
       if user_role.include? "employee" 
@@ -20,6 +22,7 @@ class Ability
         can [:update, :show], User
         can [:create, :read], Review 
         can [:read], FeedbackByReportingUser
+        can [:read], QuestionForUser
       end
     end
   end

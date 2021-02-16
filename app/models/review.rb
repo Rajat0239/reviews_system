@@ -1,7 +1,7 @@
 class Review < ApplicationRecord
   include QuarterRelated
 
-  validate :can_give_review, :on => [:create]
+  # validate :can_give_review, :on => [:create]
   validate :in_a_valid_date, :on => [:create, :update]
   validates :answer, :quarter, :user_current_role, presence: true
   validates :user_id, uniqueness: { scope: [:question_id, :quarter]}
@@ -11,16 +11,17 @@ class Review < ApplicationRecord
 
   belongs_to :user
   belongs_to :question
+  #belongs_to :question_for_user
   has_many :feedback_by_reporting_users, dependent: :destroy
 
 
-  private 
+  private  
 
     def can_give_review
       self.quarter = QuarterRelated.current_quarter
       self.user_current_role = User.find(self.user_id).current_role
-      self.errors.add(:base, "you have submitted review for this question (#{Question.find(self.question_id).question})")  if Review.exists?(question_id: self.question_id, quarter: QuarterRelated.current_quarter, user_id: self.user_id)
-      self.errors.add(:base, "this is not your question (#{Question.find(self.question_id).question})") unless Role.find_by(name: User.find(self.user_id).current_role).id == Question.find(self.question_id).role_id
+      # self.errors.add(:base, "you have submitted review for this question (#{Question.find(self.question_id).question})")  if Review.exists?(question_id: self.question_id, quarter: QuarterRelated.current_quarter, user_id: self.user_id)
+      # self.errors.add(:base, "this is not your question (#{Question.find(self.question_id).question})") unless Role.find_by(name: User.find(self.user_id).current_role).id == Question.find(self.question_id).role_id
     end
 
     def in_a_valid_date
