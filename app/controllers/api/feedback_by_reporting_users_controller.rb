@@ -1,55 +1,29 @@
 class Api::FeedbackByReportingUsersController < ApplicationController
   before_action :check_review_of_user, only: [:create]
 
-  # def show
-  #   if role_is_admin
-  #     @feedback = FeedbackByReportingUser.where(feedback_for_user_id:params[:feedback_for_user_id],quarter:current_quarter)
-  #   elsif role_is_manager
-  #     @feedback = current_user.feedback_by_reporting_users.where(feedback_for_user_id:params[:feedback_for_user_id],quarter:current_quarter)
-  #   else
-  #     @feedback = FeedbackByReportingUser.where(feedback_for_user_id:current_user.id, quarter:current_quarter, status:"true")
-  #   end
-  #     (@feedback.empty?) ? (render :json => {:message => "Sorry! feedback is not available"}) : (render json: @feedback.as_json(only: [:id, :user_id, :feedback, :feedback_for_user_id]))
-  # end
-
   def show
     @feedback_list = []
     if role_is_admin
-      @ratings = Rating.where(user_id:params[:feedback_for_user_id],quarter:current_quarter)
       @feedback = FeedbackByReportingUser.where(feedback_for_user_id:params[:feedback_for_user_id],quarter:current_quarter)
-      @feedback_list = {"ratings" => @ratings,
-                        "feedbacks" => @feedback} 
-       
-      (@feedback_list.empty?) ? (render :json => {:message => "Sorry! feedback is not available"}) : (render json: @feedback_list.as_json)
-  
     elsif role_is_manager
       @feedback = current_user.feedback_by_reporting_users.where(feedback_for_user_id:params[:feedback_for_user_id],quarter:current_quarter)
-      @ratings = Rating.where(user_id:params[:feedback_for_user_id],quarter:current_quarter)
-      @feedback_list = {"ratings" => @ratings,
-                        "feedbacks" => @feedback} 
-       
-      (@feedback_list.empty?) ? (render :json => {:message => "Sorry! feedback is not available"}) : (render json: @feedback_list.as_json)
     else
       @feedback = FeedbackByReportingUser.where(feedback_for_user_id:current_user.id, quarter:current_quarter)
-      @ratings = Rating.where(user_id:params[:feedback_for_user_id],quarter:current_quarter,status:"true")
-      @feedback_list = {"ratings" => @ratings,
-                        "feedbacks" => @feedback} 
-       
-      (@feedback_list.empty?) ? (render :json => {:message => "Sorry! feedback is not available"}) : (render json: @feedback_list.as_json)
     end
-  
-      
+    @ratings = Rating.where(user_id:params[:feedback_for_user_id],quarter:current_quarter)
+    @feedback_list = {"ratings" => @ratings,
+                      "feedbacks" => @feedback} 
+    (@ratings.empty? && @feedback.empty?) ? (render :json => {:message => "Sorry! feedback is not available"}) : (render json: @feedback_list.as_json)
   end
 
- 
-
   def create
+    
     @error = create_feedbacks(params[:feedback_by_reporting_users], params[:rating_by_reporting_user_and_Userid])
     unless @error.present?
       UserMailer.reprting_feedback_email(@feedback).deliver_now
-      render json: {message: "Feedback created successfully",}
+      render json: {message: "Feedback created successfully"}
     else
-      render json: @error
+       render json: @error
     end
   end
 
@@ -97,12 +71,14 @@ class Api::FeedbackByReportingUsersController < ApplicationController
     # end
 
     def check_review_of_user
+      
       feedback_review_id = params[:feedback_by_reporting_users]
       feedback_review_id.map do |data|
         @review = Review.where(id: data[:review_id], quarter:current_quarter)
-        if @review.empty?
-        render json: "Sorry! You con't give feedback for this user becouse this user review not available " if @review.empty?
+        if @review.empty?  
+          render json: {message: "Sorry! You con't give feedback for this user becouse this user review not available "}
+          break   
         end
-      end  
+      end
     end
 end

@@ -8,6 +8,7 @@ Rails.application.routes.draw do
     resources :question_types, only: [:index]
     resources :questions, only: [:index, :create, :update]
     resources :feedback_by_reporting_users, only: [:index, :create]
+    resources :question_for_users, only: [:index, :create]
     get '/feedback_by_reporting_users/:feedback_for_user_id', to: 'feedback_by_reporting_users#show'
     get '/show_reviews_of_user/:user_id', to: 'users#show_reviews_of_user'
     patch '/feedback_by_reporting_users/:user_id', to: 'feedback_by_reporting_users#update'

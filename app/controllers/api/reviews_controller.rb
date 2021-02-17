@@ -8,7 +8,7 @@ class Api::ReviewsController < ApplicationController
       @ratings = current_user.ratings.find_by(quarter: "1 2021").ratings_by_user
       render json: @current_user_current_quarter_reviews.to_a.push({"ratings": @ratings})  
     else
-      render json: "you have not given the review"
+      render json: {message: "you have not given the review"}
     end
   end
 
@@ -16,7 +16,7 @@ class Api::ReviewsController < ApplicationController
     @error = create_reviews(params[:reviews],params[:ratings])
     unless @error.present?
       send_email_to_reporting_user
-      render json: {message: "submitted successfully", role: current_user.current_role} 
+      render json: {message: "Reviews & rating submitted successfully !", role: current_user.current_role} 
     else
       render json: @error
     end
@@ -34,6 +34,8 @@ class Api::ReviewsController < ApplicationController
         end
         array_of_data.map do |data|
           @new_review = current_user.reviews.new(data.as_json)
+          @new_review.quarter = current_quarter
+          @new_review.user_current_role = current_user.id
           unless @new_review.save
             error = @new_review.errors.full_messages - ["User has already been taken"]
             raise ActiveRecord::Rollback

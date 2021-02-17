@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_12_125646) do
+ActiveRecord::Schema.define(version: 2021_02_15_110407) do
 
   create_table "feedback_by_reporting_users", force: :cascade do |t|
     t.integer "review_id"
@@ -25,6 +25,17 @@ ActiveRecord::Schema.define(version: 2021_02_12_125646) do
     t.index ["user_id"], name: "index_feedback_by_reporting_users_on_user_id"
   end
 
+  create_table "question_for_users", force: :cascade do |t|
+    t.integer "role_id"
+    t.integer "question_id"
+    t.string "quarter"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "status"
+    t.index ["question_id"], name: "index_question_for_users_on_question_id"
+    t.index ["role_id"], name: "index_question_for_users_on_role_id"
+  end
+
   create_table "question_types", force: :cascade do |t|
     t.string "q_type"
     t.datetime "created_at", precision: 6, null: false
@@ -33,13 +44,11 @@ ActiveRecord::Schema.define(version: 2021_02_12_125646) do
 
   create_table "questions", force: :cascade do |t|
     t.text "question"
-    t.integer "role_id"
     t.integer "question_type_id"
     t.string "options"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["question_type_id"], name: "index_questions_on_question_type_id"
-    t.index ["role_id"], name: "index_questions_on_role_id"
   end
 
   create_table "ratings", force: :cascade do |t|

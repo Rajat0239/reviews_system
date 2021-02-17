@@ -76,7 +76,7 @@ class Api::UsersController < ApplicationController
     end
 
     def user_role
-      return Role.find_role(params[:user][:user_roles_attributes][1][:role_id])
+      return Role.find_role(params[:user][:user_roles_attributes][0][:role_id])
     end
     
     def check_reporting_role
