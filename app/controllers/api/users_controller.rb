@@ -48,7 +48,9 @@ class Api::UsersController < ApplicationController
   end
 
   def show_reviews_of_user
-    @reviews = Question.joins(:reviews).where("reviews.question_id = questions.id AND reviews.user_id = ? AND reviews.quarter = ?",params[:user_id],current_quarter).select(" questions.question, reviews.answer, reviews.id")
+    # @reviews = Question.joins(:reviews).where("reviews.question_id = questions.id AND reviews.user_id = ? AND reviews.quarter = ?",params[:user_id],current_quarter).select(" questions.question, reviews.answer, reviews.id")
+    status = "true"
+    @reviews = QuestionForUser.joins("LEFT JOIN questions ON questions.id = question_for_users.question_id LEFT JOIN reviews on reviews.question_for_user_id = question_for_users.id").where("reviews.user_id = ? AND reviews.quarter = ? And question_for_users.status = ? ",params[:user_id],current_quarter,status).select("question_for_users.id, question_for_users.question_id,questions.question, reviews.answer, reviews.id")   
     unless @reviews.empty?
       @ratings = User.find(params[:user_id]).ratings.find_by(quarter: current_quarter).ratings_by_user
       render json: @reviews.to_a.push({"ratings": @ratings},{"user_id": params[:user_id]})
@@ -81,9 +83,9 @@ class Api::UsersController < ApplicationController
     
     def check_reporting_role
       user_current_role = User.find_user_current_role(params[:user][:reporting_user_id])
-      render json: "you are adding admin reporting role should be of admin" unless user_current_role == "admin" if user_role == "admin"
-      render json: "you are adding manager reporting role should be of admin" unless user_current_role == "admin" if user_role == "manager"
-      render json: "you are adding employee reporting role should be of manager or admin" unless user_current_role == "manager" || user_current_role == "admin" if user_role == "employee"
+      render :json => {:message => "you are adding admin reporting role should be of admin"} unless user_current_role == "admin" if user_role == "admin"
+      render :json => {:message => "you are adding manager reporting role should be of admin"} unless user_current_role == "admin" if user_role == "manager"
+      render :json => {:message => "you are adding employee reporting role should be of manager or admin"} unless user_current_role == "manager" || user_current_role == "admin" if user_role == "employee"
     end
 
     def user_data_for_admin
