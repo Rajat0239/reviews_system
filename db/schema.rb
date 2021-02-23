@@ -10,7 +10,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_15_110407) do
+ActiveRecord::Schema.define(version: 2021_02_22_102909) do
+
+  create_table "answer_back_ups", force: :cascade do |t|
+    t.integer "question_back_up_id"
+    t.string "answer"
+    t.string "feedback"
+    t.string "quarter"
+    t.string "f_name"
+    t.string "l_name"
+    t.string "email"
+    t.string "dob"
+    t.string "doj"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.integer "reporting_user_id"
+    t.index ["question_back_up_id"], name: "index_answer_back_ups_on_question_back_up_id"
+  end
 
   create_table "feedback_by_reporting_users", force: :cascade do |t|
     t.integer "review_id"
@@ -23,6 +39,15 @@ ActiveRecord::Schema.define(version: 2021_02_15_110407) do
     t.index ["feedback_for_user_id"], name: "index_feedback_by_reporting_users_on_feedback_for_user_id"
     t.index ["review_id"], name: "index_feedback_by_reporting_users_on_review_id"
     t.index ["user_id"], name: "index_feedback_by_reporting_users_on_user_id"
+  end
+
+  create_table "question_back_ups", force: :cascade do |t|
+    t.integer "question_id"
+    t.string "question"
+    t.string "question_type"
+    t.string "option"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "question_for_users", force: :cascade do |t|
@@ -85,13 +110,13 @@ ActiveRecord::Schema.define(version: 2021_02_15_110407) do
 
   create_table "reviews", force: :cascade do |t|
     t.integer "user_id"
-    t.integer "question_id"
+    t.integer "question_for_user_id"
     t.text "answer"
     t.string "quarter"
     t.string "user_current_role"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["question_id"], name: "index_reviews_on_question_id"
+    t.index ["question_for_user_id"], name: "index_reviews_on_question_for_user_id"
     t.index ["user_id"], name: "index_reviews_on_user_id"
   end
 

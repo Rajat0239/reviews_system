@@ -22,6 +22,11 @@ class ApplicationController < ActionController::API
 
   def role_is_manager
     return current_user.current_role == "manager"
-  end 
+  end
+  
+  def role_id
+    role =  Role.find_by(name: current_user.current_role)
+    return role.id
+  end
 end
  

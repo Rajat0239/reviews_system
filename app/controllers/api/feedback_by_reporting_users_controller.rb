@@ -3,21 +3,26 @@ class Api::FeedbackByReportingUsersController < ApplicationController
 
   def show
     @feedback_list = []
+    status = "true"
     if role_is_admin
       @feedback = FeedbackByReportingUser.where(feedback_for_user_id:params[:feedback_for_user_id],quarter:current_quarter)
-    elsif role_is_manager
+      @ratings = Rating.where(user_id:params[:feedback_for_user_id],quarter:current_quarter)
+     elsif role_is_manager
       @feedback = current_user.feedback_by_reporting_users.where(feedback_for_user_id:params[:feedback_for_user_id],quarter:current_quarter)
+      @ratings = Rating.where(user_id:params[:feedback_for_user_id],quarter:current_quarter,status:status)
     else
       @feedback = FeedbackByReportingUser.where(feedback_for_user_id:current_user.id, quarter:current_quarter)
+      @ratings = Rating.where(user_id:params[:feedback_for_user_id],quarter:current_quarter,status:status)
     end
-    @ratings = Rating.where(user_id:params[:feedback_for_user_id],quarter:current_quarter)
-    @feedback_list = {"ratings" => @ratings,
-                      "feedbacks" => @feedback} 
-    (@ratings.empty? && @feedback.empty?) ? (render :json => {:message => "Sorry! feedback is not available"}) : (render json: @feedback_list.as_json)
+    @feedback_list = {"ratings" => @ratings,"feedbacks" => @feedback}
+    if @feedback.empty?
+      render :json => {:message => "Sorry! feedback is not available"}
+    else
+    (@ratings.empty?) ? (render :json => {:message => "Sorry! feedback is not approval by admin"}) : (render json: @feedback_list.as_json)
+    end    
   end
 
   def create
-    
     @error = create_feedbacks(params[:feedback_by_reporting_users], params[:rating_by_reporting_user_and_Userid])
     unless @error.present?
       UserMailer.reprting_feedback_email(@feedback).deliver_now
@@ -71,7 +76,6 @@ class Api::FeedbackByReportingUsersController < ApplicationController
     # end
 
     def check_review_of_user
-      
       feedback_review_id = params[:feedback_by_reporting_users]
       feedback_review_id.map do |data|
         @review = Review.where(id: data[:review_id], quarter:current_quarter)

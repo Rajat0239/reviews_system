@@ -2,7 +2,7 @@ class Api::ReviewDatesController < ApplicationController
 
   def index
     @review_dates = ReviewDate.date_for_quarter(current_quarter)
-    unless @review_dates.empty?
+    if @review_dates.present?
       render json: @review_dates.as_json(only: [:start_date, :deadline_date, :id])
     else
       render :json => {:message => "date is not available"}
