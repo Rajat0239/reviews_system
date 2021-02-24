@@ -12,12 +12,12 @@ class User < ApplicationRecord
   scope :excluding_admin, ->{where.not(current_role: "admin")}
   scope :employee_under_manager, ->(id){where(reporting_user_id: id)}
 
-  has_many :reviews, dependent: :destroy
-  has_many :user_roles, dependent: :destroy 
+  has_many :reviews
+  has_many :user_roles
   has_many :roles, through: :user_roles
   has_many :questions
-  has_many :feedback_by_reporting_users, dependent: :destroy
-  has_many :ratings, dependent: :destroy
+  has_many :feedback_by_reporting_users
+  has_many :ratings
   accepts_nested_attributes_for :user_roles, allow_destroy: true
 
   

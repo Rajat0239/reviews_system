@@ -10,7 +10,7 @@ Rails.application.routes.draw do
     resources :feedback_by_reporting_users, only: [:index, :create]
     resources :question_for_users, only: [:index, :create, :update, :destroy]
     get '/feedback_by_reporting_users/:feedback_for_user_id', to: 'feedback_by_reporting_users#show'
-    get '/show_reviews_of_user/:user_id', to: 'users#show_reviews_of_user'
+    get '/show_reviews_of_user/:id', to: 'users#show_reviews_of_user'
     get '/questions/manager_question_list', to: 'questions#manager_question_list'
     get '/questions/employee_question_list', to: 'questions#employee_question_list'
     get '/questions/:id', to: 'questions#show'

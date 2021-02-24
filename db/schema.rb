@@ -10,23 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_22_102909) do
-
-  create_table "answer_back_ups", force: :cascade do |t|
-    t.integer "question_back_up_id"
-    t.string "answer"
-    t.string "feedback"
-    t.string "quarter"
-    t.string "f_name"
-    t.string "l_name"
-    t.string "email"
-    t.string "dob"
-    t.string "doj"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.integer "reporting_user_id"
-    t.index ["question_back_up_id"], name: "index_answer_back_ups_on_question_back_up_id"
-  end
+ActiveRecord::Schema.define(version: 2021_02_24_054922) do
 
   create_table "feedback_by_reporting_users", force: :cascade do |t|
     t.integer "review_id"
@@ -41,13 +25,15 @@ ActiveRecord::Schema.define(version: 2021_02_22_102909) do
     t.index ["user_id"], name: "index_feedback_by_reporting_users_on_user_id"
   end
 
-  create_table "question_back_ups", force: :cascade do |t|
+  create_table "question_backups", force: :cascade do |t|
     t.integer "question_id"
-    t.string "question"
-    t.string "question_type"
+    t.string "ques"
     t.string "option"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "question_type_id"
+    t.integer "question_for_user_id"
+    t.index ["question_id"], name: "index_question_backups_on_question_id"
   end
 
   create_table "question_for_users", force: :cascade do |t|
