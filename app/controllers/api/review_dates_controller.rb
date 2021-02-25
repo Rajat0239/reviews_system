@@ -1,6 +1,7 @@
 class Api::ReviewDatesController < ApplicationController
 
   def index
+    byebug
     @review_dates = ReviewDate.date_for_quarter(current_quarter)
     unless @review_dates.empty?
       render json: @review_dates.as_json(only: [:start_date, :deadline_date, :id])

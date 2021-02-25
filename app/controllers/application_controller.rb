@@ -5,9 +5,9 @@ class ApplicationController < ActionController::API
   end
 
   rescue_from ActiveRecord::RecordNotFound do |exception|
-    render json: "Record Not Found"
+    render :json => {:message => "this record not found"}
   end
-
+  
   def current_user
     @current_user ||= User.find_by(authentication_token: request.headers['Authorization'])
   end

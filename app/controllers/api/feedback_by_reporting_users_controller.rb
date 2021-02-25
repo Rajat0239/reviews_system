@@ -101,7 +101,7 @@ class Api::FeedbackByReportingUsersController < ApplicationController
       feedback_review_id.map do |data|
         @review = Review.where(id: data[:review_id], quarter:current_quarter)
         if @review.empty?
-        render json: "Sorry! You con't give feedback for this user becouse this user review not available " if @review.empty?
+          render json: "Sorry! You con't give feedback for this user becouse this user review not available " if @review.empty?
         end
       end  
     end

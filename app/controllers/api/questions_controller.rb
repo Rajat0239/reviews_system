@@ -8,7 +8,7 @@ class Api::QuestionsController < ApplicationController
     else
       @role_id = Role.find_by(name: current_user.current_role).id
       @questions = Question.where(role_id: @role_id)
-      render json: @questions.as_json(only: [:id, :question, :options])
+      render json: @questions.as_json(only: [:id, :question, :options, :question_type_id])
     end
   end
   
