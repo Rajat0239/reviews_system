@@ -18,6 +18,8 @@ class User < ApplicationRecord
   has_many :questions
   has_many :feedback_by_reporting_users, dependent: :destroy
   has_many :ratings, dependent: :destroy
+  has_many :asset_items
+  has_many :asset_tracks
   accepts_nested_attributes_for :user_roles, allow_destroy: true
 
   
