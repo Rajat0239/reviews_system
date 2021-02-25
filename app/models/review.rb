@@ -8,6 +8,7 @@ class Review < ApplicationRecord
 
   scope :find_reporting_user_id, -> (id) {find(id).user.reporting_user_id}
   scope :current_user_current_quarter_reviews, ->(quarter) {select(:id, :ratings, :feedback, :question_for_user_id).where(quarter: quarter)} 
+  scope :find_question_for_user_id, ->(id,quarter) {where("user_id = ? AND quarter = ?",id,quarter).select("id, question_for_user_id")}
 
   belongs_to :user
   has_many :question_for_users

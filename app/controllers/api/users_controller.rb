@@ -47,30 +47,6 @@ class Api::UsersController < ApplicationController
     render :json => {:message => "user has been removed"}
   end
 
-  def show_reviews_of_user
-    @reviews = []
-    allotted_ids = Review.where(user_id: params[:id],quarter:current_quarter).select("id, question_for_user_id")
-    if !allotted_ids.empty?
-      allotted_ids.map do |data|
-        allotted_question = QuestionForUser.find_by(id:data.question_for_user_id)
-        if allotted_question.present?
-          @question = Question.find_by(id:allotted_question.question_id)
-        else
-          @question = QuestionBackup.find_by(question_for_user_id:data.question_for_user_id)
-        end
-          @review = Review.find_by(id:data.id)
-          review = {review:  @question.attributes.merge( :review_id => @review.id, :answere => @review.answer )}  
-          @reviews.push(review)
-        end  
-    end
-    unless @reviews.empty?
-      @ratings = User.find(params[:id]).ratings.find_by(quarter: current_quarter).ratings_by_user
-      render json: @reviews.push("ratings": @ratings, "user_id": params[:user_id])
-    else 
-      render :json => {:message => "review is not available for this user"}
-    end
-  end
-
   private
 
     def user_params

@@ -7,7 +7,7 @@ class Question < ApplicationRecord
   validate :check_reviewdate, :on => [:update]
   validate :check_valid_question_id, :set_options_nill_if_q_type_is_feedback, :on => [:create]
   validates :question, presence: true
-  validates :question, uniqueness: { scope: [:question], message: 'Question has already created !' }
+  validates :question, uniqueness: { scope: [:question], message: " This Question has already created !" }
   validates :options, presence: true, if: :if_options_are?
   
   belongs_to :question_type
