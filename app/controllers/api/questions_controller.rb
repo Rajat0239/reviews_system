@@ -26,6 +26,7 @@ class Api::QuestionsController < ApplicationController
 
   def create
     @question = Question.new(params[:question_list].as_json)
+    byebug
     @question.save ? (render json: {message: "Question created successfully"}) : (render json: @question.errors)
   end
 

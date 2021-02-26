@@ -17,7 +17,7 @@ class Api::SessionController < ApplicationController
       current_user.save
       render :json => {:message => "you have succesfully logged out"}
     else
-      render json: "do login first"
+      render :json => {:message => "you have succesfully logged out"}
     end    
   end
   

@@ -5,22 +5,18 @@ class Api::QuestionForUsersController < ApplicationController
     def index
       current_user.current_role
       role = Role.find_by(name: current_user.current_role)
-      status = "true"
       if role_is_admin
        @questions = Question.joins("INNER JOIN question_types on questions.question_type_id = question_types.id").select("questions.id, questions.question, questions.options,question_types.q_type")
-      elsif role_is_manager
-       @questions = Question.joins("INNER JOIN roles ON roles.id = question_for_users.role_id INNER JOIN question_for_users on questions.id = question_for_users.question_id INNER JOIN question_types on question_types.id = questions.question_type_id").where("question_for_users.quarter = ? AND question_for_users.role_id = ? And question_for_users.status = ? ",current_quarter,role.id, status).select("question_for_users.id, questions.question, questions.options, roles.name,question_types.q_type,question_for_users.status")
       else  
-       @questions = Question.joins("INNER JOIN roles ON roles.id = question_for_users.role_id INNER JOIN question_for_users on questions.id = question_for_users.question_id INNER JOIN question_types on question_types.id = questions.question_type_id").where("question_for_users.quarter = ? AND question_for_users.role_id = ? And question_for_users.status = ?",current_quarter,role.id, status).select("question_for_users.id, questions.question, questions.options, roles.name,question_types.q_type,question_for_users.status")
+       @questions = Question.joins("INNER JOIN roles ON roles.id = question_for_users.role_id INNER JOIN question_for_users on questions.id = question_for_users.question_id INNER JOIN question_types on question_types.id = questions.question_type_id").where("question_for_users.quarter = ? AND question_for_users.role_id = ? And question_for_users.status = ?",current_quarter,role.id, "true").select("question_for_users.id, questions.question, questions.options, roles.name,question_types.q_type,question_for_users.status")
       end  
-  
       (@questions.empty?) ? (render :json => {:message => "Sorry! question is not available for this role"}) : (render json: @questions.as_json)
     end
     
     def create
       @error = add_question(params[:question_for_users])
       unless @error.present?
-        render json: {message: "Question add successfully",}
+        render json: {message: "Question add successfully for this role!",}
       else
         render json: @error
       end

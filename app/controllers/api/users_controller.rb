@@ -43,36 +43,6 @@ class Api::UsersController < ApplicationController
     update_users_reporting_user(@user) if @user.current_role == "manager"
     render :json => {:message => "user has been disabled"}
   end
-
-  def show_reviews_of_user
-
-    @reviews = []
-    allotted_ids = Review.where(user_id: params[:id],quarter:current_quarter).select("id, question_for_user_id")
-    if !allotted_ids.empty?
-      allotted_ids.map do |data|
-        allotted_question = QuestionForUser.find_by(id:data.question_for_user_id)
-        if allotted_question.present?
-          @question = Question.find_by(id:allotted_question.question_id)
-        else
-          @question = QuestionBackup.find_by(question_for_user_id:data.question_for_user_id)
-        end
-          @review = Review.find_by(id:data.id)
-          review = {review:  @question.attributes.merge( :review_id => @review.id, :answere => @review.answer )}  
-          @reviews.push(review)
-        end  
-    end
-    unless @reviews.empty?
-      @ratings = User.find(params[:id]).ratings.find_by(quarter: current_quarter).ratings_by_user
-      render json: @reviews.push("ratings": @ratings, "user_id": params[:user_id])
-    else 
-      render :json => {:message => "review is not available for this user"}
-    end
-  end
-
-  def asset_items_of_user 
-    render json: @user.asset_items.joins(:asset).select("asset_items.id, (assets.name || ' ' || asset_items.asset_count) as asset_name") 
-  end
-
   private
 
     def user_params

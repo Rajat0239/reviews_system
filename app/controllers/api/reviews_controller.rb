@@ -2,9 +2,9 @@ class Api::ReviewsController < ApplicationController
   
   before_action :all_question_mendatory, only: [:create]
 
-  def index
-    @current_user_current_quarter_reviews = []
-    allotted_ids = Review.where("reviews.user_id = ? AND reviews.quarter = ? ",current_user.id,current_quarter).select("id, question_for_user_id")
+  def show_reviews
+    @reviews = []
+    allotted_ids = Review.find_question_for_user_id(params[:user_id], current_quarter)
     if !allotted_ids.empty?
       allotted_ids.map do |data|
         allotted_question = QuestionForUser.find_by(id:data.question_for_user_id)
@@ -14,15 +14,15 @@ class Api::ReviewsController < ApplicationController
           @question = QuestionBackup.find_by(question_for_user_id:data.question_for_user_id)
         end
           @review = Review.find_by(id:data.id)
-          review = {review:  @question.attributes.merge( :review_id => @review.id, :answere => @review.answer )}  
-          @current_user_current_quarter_reviews.push(review)
+          review = {review:  @question.attributes.merge( :review_id => @review.id, :answer => @review.answer )}  
+          @reviews.push(review)
         end  
     end
-    unless @current_user_current_quarter_reviews.empty?
-      @ratings = current_user.ratings.find_by(quarter: "1 2021").ratings_by_user
-      render json: @current_user_current_quarter_reviews.to_a.push({"ratings": @ratings})  
-    else
-      render json: {message: "you have not given the review"}
+    unless @reviews.empty?
+      @ratings = Rating.find_by(user_id: params[:user_id], quarter: current_quarter).ratings_by_user
+      render json: @reviews.push("ratings": @ratings, "user_id": params[:user_id])
+    else 
+      render :json => {:message => "review is not available for this user"}
     end
   end
 
@@ -36,6 +36,8 @@ class Api::ReviewsController < ApplicationController
     end
   end
 
+  
+
   private
     
     def create_reviews(array_of_data, ratings)
@@ -47,9 +49,7 @@ class Api::ReviewsController < ApplicationController
           raise ActiveRecord::Rollback
         end
         array_of_data.map do |data|
-          byebug
           question = QuestionForUser.where(id: data[:question_for_user_id], status:"true", role_id: role_id)
-         byebug
           if question.empty?
             error = {:message => "Sorry! question is not available"}
             raise ActiveRecord::Rollback
@@ -68,7 +68,7 @@ class Api::ReviewsController < ApplicationController
     end
 
     def all_question_mendatory
-      render json: "all the questions are mendatory " unless params[:reviews].count == QuestionForUser.where(role_id: role_id).count 
+      render json: {message: "all the questions are mendatory"} unless params[:reviews].count == QuestionForUser.where(role_id: role_id).count 
     end
 
     def send_email_to_reporting_user

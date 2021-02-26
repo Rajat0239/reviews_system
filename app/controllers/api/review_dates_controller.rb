@@ -16,13 +16,16 @@ class Api::ReviewDatesController < ApplicationController
   end
 
   def update
-    @review_date.update(date_params) ? (render :json => {:message => "date is updated from #{@review_date.start_date} to #{@review_date.deadline_date}"}) : (render json: @review_date.errors[:base])
+    @review_date.update(date_params) ? (render :json => {:message => "#{custom_message_if_start_date_is_passed}date is updated from #{@review_date.start_date} to #{@review_date.deadline_date}"}) : (render json: @review_date.errors[:base])
   end
 
   private
-  
+
     def date_params
       params.require(:review_dates).permit(:start_date, :deadline_date)
     end
     
+    def custom_message_if_start_date_is_passed
+      return "start date can not be update and " if @review_date.start_date < Date.today
+    end
 end
