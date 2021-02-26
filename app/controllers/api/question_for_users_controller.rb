@@ -33,8 +33,8 @@ class Api::QuestionForUsersController < ApplicationController
     end
 
     def destroy
-      @question_del = QuestionForUser.find(params[:id])
-      (@question_del.destroy) ? (render json: {:message => "Question Delete successfully for this role!"}) : (render json: @question_del.errors)
+      @question_for_user
+      (@question_for_user.destroy) ? (render json: {:message => "Question Delete successfully for this role!"}) : (render json: @question_for_user.errors)
     end
    
     private

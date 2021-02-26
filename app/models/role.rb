@@ -6,8 +6,6 @@ class Role < ApplicationRecord
   
   has_many :user_roles
   has_many :users, through: :user_roles
-  # has_many :questions
-
   has_many :question_for_users
   has_many :questions, through: :question_for_users
 
