@@ -10,8 +10,66 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+ActiveRecord::Schema.define(version: 2021_02_23_063227) do
 
-ActiveRecord::Schema.define(version: 2021_02_22_102909) do
+  create_table "answer_back_ups", force: :cascade do |t|
+    t.integer "question_back_up_id"
+    t.string "answer"
+    t.string "feedback"
+    t.string "quarter"
+    t.string "f_name"
+    t.string "l_name"
+    t.string "email"
+    t.string "dob"
+    t.string "doj"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.integer "reporting_user_id"
+    t.index ["question_back_up_id"], name: "index_answer_back_ups_on_question_back_up_id"
+  end
+
+  create_table "asset_fields", force: :cascade do |t|
+    t.integer "asset_id"
+    t.string "field"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["asset_id"], name: "index_asset_fields_on_asset_id"
+  end
+
+  create_table "asset_item_values", force: :cascade do |t|
+    t.integer "asset_item_id"
+    t.integer "asset_field_id"
+    t.string "value"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["asset_field_id"], name: "index_asset_item_values_on_asset_field_id"
+    t.index ["asset_item_id"], name: "index_asset_item_values_on_asset_item_id"
+  end
+
+  create_table "asset_items", force: :cascade do |t|
+    t.integer "asset_id"
+    t.integer "asset_count"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.integer "user_id"
+    t.index ["asset_id"], name: "index_asset_items_on_asset_id"
+    t.index ["user_id"], name: "index_asset_items_on_user_id"
+  end
+
+  create_table "asset_tracks", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "asset_item_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["asset_item_id"], name: "index_asset_tracks_on_asset_item_id"
+    t.index ["user_id"], name: "index_asset_tracks_on_user_id"
+  end
+
+  create_table "assets", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
 
   create_table "feedback_by_reporting_users", force: :cascade do |t|
     t.integer "review_id"

@@ -1,4 +1,4 @@
-class Api::FeedbackByReportingUsersController < ApplicationController
+class ReviewSystem::FeedbackByReportingUsersController < ApplicationController
   before_action :check_review_of_user, only: [:create]
 
   def show

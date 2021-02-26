@@ -1,4 +1,4 @@
-class Api::QuestionForUsersController < ApplicationController
+class ReviewSystem::QuestionForUsersController < ApplicationController
 
     before_action :role_is_admin, only: [:create, :update, :destroy]
   

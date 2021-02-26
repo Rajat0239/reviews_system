@@ -1,4 +1,4 @@
-class Api::QuestionTypesController < ApplicationController
+class ReviewSystem::QuestionTypesController < ApplicationController
 
   def index
     @question_type = QuestionType.all

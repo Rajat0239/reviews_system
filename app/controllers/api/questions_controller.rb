@@ -1,4 +1,4 @@
-class Api::QuestionsController < ApplicationController
+class ReviewSystem::QuestionsController < ApplicationController
 
   before_action :role_is_admin, only: [:create, :update, :index]
 
@@ -11,7 +11,7 @@ class Api::QuestionsController < ApplicationController
   end
 
   def manager_question_list
-    role_id = "2" 
+    role_id = "2"      
      @question = Question.joins("INNER JOIN roles ON roles.id = question_for_users.role_id INNER JOIN question_for_users on questions.id = question_for_users.question_id INNER JOIN question_types on question_types.id = questions.question_type_id").where("question_for_users.quarter = ? AND question_for_users.role_id = ? ",current_quarter,role_id).select("question_for_users.id, question_for_users.question_id,questions.question, questions.options, roles.name,question_types.q_type,question_for_users.status")
      @questions = QuestionBackup.joins("INNER JOIN roles ON roles.id = question_for_users.role_id INNER JOIN question_for_users on question_backups.question_id = question_for_users.question_id INNER JOIN question_types on question_types.id = question_backups.question_type_id").where("question_for_users.quarter = ? AND question_for_users.role_id = ? And question_for_users.status = ? ",current_quarter,role.id, status).select("question_for_users.id, question_backups.question, question_backups.options, roles.name,question_types.q_type,question_for_users.status") if @questions.empty?
     

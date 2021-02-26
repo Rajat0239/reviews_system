@@ -1,4 +1,4 @@
-class Api::ReviewsController < ApplicationController
+class ReviewSystem::ReviewsController < ApplicationController
   
   before_action :all_question_mendatory, only: [:create]
 
