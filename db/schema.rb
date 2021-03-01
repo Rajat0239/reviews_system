@@ -10,23 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_23_063227) do
-
-  create_table "answer_back_ups", force: :cascade do |t|
-    t.integer "question_back_up_id"
-    t.string "answer"
-    t.string "feedback"
-    t.string "quarter"
-    t.string "f_name"
-    t.string "l_name"
-    t.string "email"
-    t.string "dob"
-    t.string "doj"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.integer "reporting_user_id"
-    t.index ["question_back_up_id"], name: "index_answer_back_ups_on_question_back_up_id"
-  end
+ActiveRecord::Schema.define(version: 2021_02_26_104225) do
 
   create_table "asset_fields", force: :cascade do |t|
     t.integer "asset_id"
@@ -84,24 +68,13 @@ ActiveRecord::Schema.define(version: 2021_02_23_063227) do
     t.index ["user_id"], name: "index_feedback_by_reporting_users_on_user_id"
   end
 
-  create_table "question_backups", force: :cascade do |t|
-    t.integer "question_id"
-    t.string "ques"
-    t.string "option"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.integer "question_type_id"
-    t.integer "question_for_user_id"
-    t.index ["question_id"], name: "index_question_backups_on_question_id"
-  end
-
   create_table "question_for_users", force: :cascade do |t|
     t.integer "role_id"
     t.integer "question_id"
     t.string "quarter"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.string "status"
+    t.boolean "status", default: true
     t.index ["question_id"], name: "index_question_for_users_on_question_id"
     t.index ["role_id"], name: "index_question_for_users_on_role_id"
   end
@@ -118,6 +91,7 @@ ActiveRecord::Schema.define(version: 2021_02_23_063227) do
     t.string "options"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "status", default: true
     t.index ["question_type_id"], name: "index_questions_on_question_type_id"
   end
 

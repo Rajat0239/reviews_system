@@ -1,9 +1,6 @@
 Rails.application.routes.draw do
 
   namespace :review_system do
-    resources :users
-    resources :session
-    resources :roles
     resources :reviews
     resources :review_dates
     resources :question_types
@@ -31,5 +28,10 @@ Rails.application.routes.draw do
     get '/free_asset_items', to: 'asset_items#list_of_free_assets'
     get '/allocated_asset_items_for_asset/:id', to: 'assets#show_allocated_assets'
     get '/free_assets_of_asset/:id', to: 'assets#show_free_assets'
+  end
+  namespace :users do
+    resources :users
+    resources :session
+    resources :roles
   end
 end

@@ -1,4 +1,4 @@
-class ReviewSystem::SessionController < ApplicationController
+class Users::SessionController < ApplicationController
   
   skip_load_and_authorize_resource
   

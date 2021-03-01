@@ -1,4 +1,4 @@
-class ReviewSystem::RolesController < ApplicationController
+class Users::RolesController < ApplicationController
   
   def index
     @roles = Role.all
@@ -16,14 +16,14 @@ class ReviewSystem::RolesController < ApplicationController
   end
   
   def destroy
+    byebug
     @role = Role.find(params[:id])
-    (@role.destroy) ? (render json: {:message => "Role delete successfully"}) : (render json: @role.errors)
+    (@role.destroy) ? (render json: {:message => "Role deleted successfully"}) : (render json: @role.errors)
   end
   
   private
   
     def user_params
-      byebug
       params.require(:user_roles).permit(:name) 
     end
 end

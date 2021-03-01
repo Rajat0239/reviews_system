@@ -28,5 +28,14 @@ class ApplicationController < ActionController::API
     role =  Role.find_by(name: current_user.current_role)
     return role.id
   end
+
+  # def success_response(msg)
+  #   render :json => {:message => msg), status: 200
+  # end
+
+  # def faliure_response(msg)
+  #   render json: msg, status: 422
+  # end
+
 end
  

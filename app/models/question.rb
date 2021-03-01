@@ -1,17 +1,14 @@
 class Question < ApplicationRecord
   
-  before_destroy :question_backup, prepend: true
-  
   @@question_valid_status = true
   
-  validate :check_reviewdate, :on => [:update]
+  validate :do_not_update_if_in_review_date_range, :on => [:update]
   validate :check_valid_question_id, :set_options_nill_if_q_type_is_feedback, :on => [:create]
   validates :question, presence: true
   validates :question, uniqueness: { scope: [:question], message: " This Question has already created !" }
   validates :options, presence: true, if: :if_options_are?
   
   belongs_to :question_type
-  has_many :question_backups
   has_many :question_for_users
   has_many :roles, through: :question_for_users
 
@@ -24,40 +21,13 @@ class Question < ApplicationRecord
   end
 
   def check_valid_question_id
-    unless self.question_type
-      @@question_valid_status = false
-    end
+    @@question_valid_status = false unless self.question_type
   end
 
-  def check_reviewdate 
-    if QuarterRelated.is_quarter_present 
-      @review_date = ReviewDate.find_date(QuarterRelated.current_quarter)
-      question = QuestionForUser.find_by(question_id:self.id)
-      if question.present?
-        if (Time.now.to_date).before?(@review_date.start_date) != true
-          self.errors.add(:message, "Sorry, You Are Not Allowed to Access This Action")
-          throw(:abort)
-        end 
-      else
-        return   
-      end
-    else
-      return self.errors.add(:message, "Sorry, You Are Not Allowed to Access This Action")
-    end 
+  def do_not_update_if_in_review_date_range
+    @review_date = ReviewDate.find_date(QuarterRelated.current_quarter)
+    byebug
+    self.errors.add(:base, "you can't update when in review date range") if (@review_date.start_date ..  @review_date.deadline_date).cover?(Time.now.to_date)
   end
-
-  def question_backup
-    allotted_ids = QuestionForUser.where(question_id:self.id).select("id")
-    if !allotted_ids.empty?
-      allotted_ids.map do |data|
-        @question = self.question_backups.new(ques:self.question,option:self.options,question_type_id:self.question_type_id, question_for_user_id:data.id)
-        if @question.save
-          QuestionForUser.find(data.id).delete
-        else
-          self.errors.add(:message, "(#{@question.errors.full_messages})")
-          throw(:abort)
-        end 
-      end
-    end   
-  end  
+  
 end
