@@ -5,14 +5,12 @@ class Api::ReviewsController < ApplicationController
   def show_reviews
     @reviews = []
     allotted_ids = Review.find_question_for_user_id(params[:user_id], current_quarter)
+    # allotted_ids = Review.where(user_id: params[:user_id],quarter:current_quarter).select("id, question_for_user_id")
     if !allotted_ids.empty?
       allotted_ids.map do |data|
         allotted_question = QuestionForUser.find_by(id:data.question_for_user_id)
-        if allotted_question.present?
-          @question = Question.find_by(id:allotted_question.question_id)
-        else
-          @question = QuestionBackup.find_by(question_for_user_id:data.question_for_user_id)
-        end
+          @question = Question.find_by(id:allotted_question.question_id) if allotted_question.present?
+          @question = QuestionBackup.find_by(question_id:allotted_question.question_id) if !@question.present?
           @review = Review.find_by(id:data.id)
           review = {review:  @question.attributes.merge( :review_id => @review.id, :answer => @review.answer )}  
           @reviews.push(review)
@@ -35,8 +33,6 @@ class Api::ReviewsController < ApplicationController
       render json: @error
     end
   end
-
-  
 
   private
     

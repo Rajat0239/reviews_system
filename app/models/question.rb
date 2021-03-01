@@ -47,17 +47,12 @@ class Question < ApplicationRecord
   end
 
   def question_backup
-    allotted_ids = QuestionForUser.where(question_id:self.id).select("id")
-    if !allotted_ids.empty?
-      allotted_ids.map do |data|
-        @question = self.question_backups.new(ques:self.question,option:self.options,question_type_id:self.question_type_id, question_for_user_id:data.id)
-        if @question.save
-          QuestionForUser.find(data.id).delete
-        else
-          self.errors.add(:message, "(#{@question.errors.full_messages})")
-          throw(:abort)
-        end 
-      end
-    end   
+    @question = self.question_backups.new(questions:self.question,options:self.options,question_type_id:self.question_type_id)
+    if @question.save
+      return
+    else
+      self.errors.add(:message, "(#{@question.errors.full_messages})")
+      throw(:abort)
+    end 
   end  
 end

@@ -1,6 +1,6 @@
 class QuestionForUser < ApplicationRecord
 
-  before_destroy :check_date, prepend: true
+  # before_destroy :check_date, prepend: true
 
   validate :check_date, :on => [:update]
   validates :question_id, uniqueness: { scope: [:question_id, :quarter, :role_id], message: 'You have already add this question for this role in prasent quarter!'}

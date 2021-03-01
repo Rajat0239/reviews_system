@@ -10,8 +10,50 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+ActiveRecord::Schema.define(version: 2021_03_01_124400) do
 
-ActiveRecord::Schema.define(version: 2021_02_22_102909) do
+  create_table "asset_fields", force: :cascade do |t|
+    t.integer "asset_id"
+    t.string "field"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["asset_id"], name: "index_asset_fields_on_asset_id"
+  end
+
+  create_table "asset_item_values", force: :cascade do |t|
+    t.integer "asset_item_id"
+    t.integer "asset_field_id"
+    t.string "value"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["asset_field_id"], name: "index_asset_item_values_on_asset_field_id"
+    t.index ["asset_item_id"], name: "index_asset_item_values_on_asset_item_id"
+  end
+
+  create_table "asset_items", force: :cascade do |t|
+    t.integer "asset_id"
+    t.string "integer"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.integer "user_id"
+    t.index ["asset_id"], name: "index_asset_items_on_asset_id"
+    t.index ["user_id"], name: "index_asset_items_on_user_id"
+  end
+
+  create_table "asset_tracks", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "asset_item_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["asset_item_id"], name: "index_asset_tracks_on_asset_item_id"
+    t.index ["user_id"], name: "index_asset_tracks_on_user_id"
+  end
+
+  create_table "assets", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
 
   create_table "feedback_by_reporting_users", force: :cascade do |t|
     t.integer "review_id"
@@ -28,12 +70,11 @@ ActiveRecord::Schema.define(version: 2021_02_22_102909) do
 
   create_table "question_backups", force: :cascade do |t|
     t.integer "question_id"
-    t.string "ques"
-    t.string "option"
+    t.string "questions"
+    t.string "options"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "question_type_id"
-    t.integer "question_for_user_id"
     t.index ["question_id"], name: "index_question_backups_on_question_id"
   end
 
@@ -60,6 +101,7 @@ ActiveRecord::Schema.define(version: 2021_02_22_102909) do
     t.string "options"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "status"
     t.index ["question_type_id"], name: "index_questions_on_question_type_id"
   end
 
@@ -76,6 +118,15 @@ ActiveRecord::Schema.define(version: 2021_02_22_102909) do
     t.integer "ratings_by_user", default: 0
     t.index ["reporting_user_id"], name: "index_ratings_on_reporting_user_id"
     t.index ["user_id"], name: "index_ratings_on_user_id"
+  end
+
+  create_table "ratings_of_user_for_himselves", force: :cascade do |t|
+    t.integer "user_id"
+    t.string "quarter"
+    t.integer "ratings"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_ratings_of_user_for_himselves_on_user_id"
   end
 
   create_table "review_dates", force: :cascade do |t|
@@ -105,6 +156,7 @@ ActiveRecord::Schema.define(version: 2021_02_22_102909) do
   create_table "user_roles", force: :cascade do |t|
     t.integer "role_id"
     t.integer "user_id"
+    t.string "name"
     t.index ["role_id"], name: "index_user_roles_on_role_id"
     t.index ["user_id"], name: "index_user_roles_on_user_id"
   end
@@ -121,14 +173,15 @@ ActiveRecord::Schema.define(version: 2021_02_22_102909) do
     t.datetime "remember_created_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.string "authentication_token"
     t.string "current_role"
+    t.string "authentication_token", limit: 30
     t.integer "reporting_user_id"
     t.boolean "active_status", default: true
-    t.index ["authentication_token"], name: "index_users_on_authentication_token"
+    t.index ["authentication_token"], name: "index_users_on_authentication_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "feedback_by_reporting_users", "users"
   add_foreign_key "feedback_by_reporting_users", "users", column: "feedback_for_user_id"
 end
