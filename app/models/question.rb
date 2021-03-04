@@ -1,5 +1,5 @@
 class Question < ApplicationRecord
-  
+
   @@question_valid_status = true
   
   validate :do_not_update_if_in_review_date_range, :on => [:update]
@@ -26,8 +26,7 @@ class Question < ApplicationRecord
 
   def do_not_update_if_in_review_date_range
     @review_date = ReviewDate.find_date(QuarterRelated.current_quarter)
-    byebug
     self.errors.add(:base, "you can't update when in review date range") if (@review_date.start_date ..  @review_date.deadline_date).cover?(Time.now.to_date)
   end
-  
+
 end

@@ -43,6 +43,8 @@ class Users::UsersController < ApplicationController
     update_users_reporting_user(@user) if @user.current_role == "manager"
     render :json => {:message => "user has been disabled"}
   end
+
+  
   private
 
     def user_params

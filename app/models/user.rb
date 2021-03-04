@@ -9,7 +9,7 @@ class User < ApplicationRecord
 
   scope :find_user, ->(id) {find(id)}
   scope :find_user_current_role, ->(id) {find(id).current_role}
-  scope :excluding_admin, ->{where.not(current_role: "admin")}
+  scope :excluding_admin, ->{where.not(current_role: "admin", active_status: "false")}
   scope :employee_under_manager, ->(id){where("reporting_user_id = ? AND active_status = ?",id,true)}
 
   has_many :reviews
