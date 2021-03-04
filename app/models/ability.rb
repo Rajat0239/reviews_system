@@ -2,14 +2,13 @@ class Ability
   include CanCan::Ability
   def initialize(user)
     if user.present?
-      user_role = user.roles.pluck:name
-      if user_role.include? "admin"
+      user_role = user.current_role
+      if user_role == "admin"
         can :manage, :all 
         cannot [:create, :update, :read], Review
       end
 
-      if user_role.include? "manager"
-        # can [:read], Question
+      if user_role == "manager"
         can [:update, :read, :show_reviews_of_user, :show], User
         can [:create, :read, :show_reviews], Review
         can [:create, :read], FeedbackByReportingUser
@@ -17,8 +16,7 @@ class Ability
         
       end
 
-      if user_role.include? "employee" 
-        # can [:read], Question
+      if user_role == "employee" 
         can [:update, :show], User
         can [:create, :read, :show_reviews], Review 
         can [:read], FeedbackByReportingUser

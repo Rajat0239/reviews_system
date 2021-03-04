@@ -1,4 +1,4 @@
-class Api::UsersController < ApplicationController
+class Users::UsersController < ApplicationController
 
   def index
     if role_is_admin

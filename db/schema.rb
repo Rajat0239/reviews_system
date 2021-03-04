@@ -68,23 +68,13 @@ ActiveRecord::Schema.define(version: 2021_03_01_124400) do
     t.index ["user_id"], name: "index_feedback_by_reporting_users_on_user_id"
   end
 
-  create_table "question_backups", force: :cascade do |t|
-    t.integer "question_id"
-    t.string "questions"
-    t.string "options"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.integer "question_type_id"
-    t.index ["question_id"], name: "index_question_backups_on_question_id"
-  end
-
   create_table "question_for_users", force: :cascade do |t|
     t.integer "role_id"
     t.integer "question_id"
     t.string "quarter"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.string "status"
+    t.boolean "status", default: true
     t.index ["question_id"], name: "index_question_for_users_on_question_id"
     t.index ["role_id"], name: "index_question_for_users_on_role_id"
   end
@@ -101,7 +91,7 @@ ActiveRecord::Schema.define(version: 2021_03_01_124400) do
     t.string "options"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.boolean "status"
+    t.boolean "status", default: true
     t.index ["question_type_id"], name: "index_questions_on_question_type_id"
   end
 

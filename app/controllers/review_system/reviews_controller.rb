@@ -1,27 +1,17 @@
-class Api::ReviewsController < ApplicationController
-  
+class ReviewSystem::ReviewsController < ApplicationController
   before_action :all_question_mendatory, only: [:create]
 
   def show_reviews
     @reviews = []
-    allotted_ids = Review.find_question_for_user_id(params[:user_id], current_quarter)
-    # allotted_ids = Review.where(user_id: params[:user_id],quarter:current_quarter).select("id, question_for_user_id")
-    if !allotted_ids.empty?
-      allotted_ids.map do |data|
-        allotted_question = QuestionForUser.find_by(id:data.question_for_user_id)
-          @question = Question.find_by(id:allotted_question.question_id) if allotted_question.present?
-          @question = QuestionBackup.find_by(question_id:allotted_question.question_id) if !@question.present?
-          @review = Review.find_by(id:data.id)
-          review = {review:  @question.attributes.merge( :review_id => @review.id, :answer => @review.answer )}  
-          @reviews.push(review)
-        end  
-    end
-    unless @reviews.empty?
+    @allotted_ids = Review.find_question_for_user_id(params[:user_id], current_quarter)
+    if !@allotted_ids.empty?
+      get_review
       @ratings = Rating.find_by(user_id: params[:user_id], quarter: current_quarter).ratings_by_user
       render json: @reviews.push("ratings": @ratings, "user_id": params[:user_id])
-    else 
+    else
       render :json => {:message => "review is not available for this user"}
     end
+   
   end
 
   def create
@@ -35,6 +25,16 @@ class Api::ReviewsController < ApplicationController
   end
 
   private
+
+  def get_review
+    @allotted_ids.map do |data|
+    @allotted_question = QuestionForUser.find_by(id:data.question_for_user_id)
+      @question = Question.find_by(id:@allotted_question.question_id) if @allotted_question.present?
+      @review = Review.find_by(id:data.id)
+      review = {review:  @question.attributes.merge( :review_id => @review.id, :answer => @review.answer )}  
+      @reviews.push(review)
+    end  
+  end 
     
     def create_reviews(array_of_data, ratings)
       error = ""

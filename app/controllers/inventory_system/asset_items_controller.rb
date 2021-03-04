@@ -1,6 +1,6 @@
 class InventorySystem::AssetItemsController < ApplicationController
 
-  before_action :filer_fields_and_values, only: [:create]
+  before_action :filer_fields_and_values, :check_all_fields_must_present, only: [:create]
   before_action :check_user_must_present, only: [:allocation_of_assets]
 
   def index
@@ -12,7 +12,6 @@ class InventorySystem::AssetItemsController < ApplicationController
   end
 
   def create
-    @asset = Asset.find(params[:asset_item_data][:asset_id])
     @asset_item = @asset.asset_items.new(asset_item_params)
     @asset_item.save ? (render :json => {:message => "asset item added succussfully"}) : (render json: @asset_item.errors.full_messages)
   end
@@ -69,6 +68,11 @@ class InventorySystem::AssetItemsController < ApplicationController
 
   def check_user_must_present
     render :json => {:message => "user must be present"} unless params[:user_id].present?
+  end
+
+  def check_all_fields_must_present
+    @asset = Asset.find(params[:asset_item_data][:asset_id])
+    render :json => {:message => "all fields must be present"} unless params[:asset_item_data][:asset_item_values_attributes].count == @asset.asset_fields.count
   end
 
 end
