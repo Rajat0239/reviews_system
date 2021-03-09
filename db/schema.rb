@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_01_124400) do
+ActiveRecord::Schema.define(version: 2021_03_05_093953) do
 
   create_table "asset_fields", force: :cascade do |t|
     t.integer "asset_id"
@@ -157,7 +157,6 @@ ActiveRecord::Schema.define(version: 2021_03_01_124400) do
     t.string "f_name"
     t.string "l_name"
     t.date "dob"
-    t.datetime "doj"
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
@@ -167,6 +166,7 @@ ActiveRecord::Schema.define(version: 2021_03_01_124400) do
     t.string "authentication_token", limit: 30
     t.integer "reporting_user_id"
     t.boolean "active_status", default: true
+    t.date "doj"
     t.index ["authentication_token"], name: "index_users_on_authentication_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
