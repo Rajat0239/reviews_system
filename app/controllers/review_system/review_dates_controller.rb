@@ -5,7 +5,7 @@ class ReviewSystem::ReviewDatesController < ApplicationController
     if @review_dates.present?
       render json: @review_dates.as_json(only: [:start_date, :deadline_date, :id])
     else
-      faliure_response("date is not available"}
+      render json: "date is not available"
     end
   end
 

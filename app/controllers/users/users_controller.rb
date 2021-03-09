@@ -43,6 +43,11 @@ class Users::UsersController < ApplicationController
     update_users_reporting_user(@user) if @user.current_role == "manager"
     render :json => {:message => "user has been disabled"}
   end
+
+  def user_list_for_allocation
+    @users = User.all
+  end
+
   private
 
     def user_params
@@ -50,7 +55,7 @@ class Users::UsersController < ApplicationController
     end
 
     def update_params_when_admin
-      params.require(:user).permit(:f_name, :l_name, :dob, :doj, :reporting_user_id, {user_roles_attributes: [:id, :role_id]})
+      params.require(:user).permit(:f_name, :l_name, :dob, :doj, :reporting_user_id, {user_roles_attributes: [:id, :role_id, :_destroy]})
     end
 
     def update_admin_params
@@ -76,11 +81,12 @@ class Users::UsersController < ApplicationController
 
     def user_data_for_admin
       role = Role.find_by(name: @user.current_role).id
-      @user.as_json(only:[:id,:email,:f_name,:l_name,:dob,:doj,:reporting_user_id]).merge("role" => role)
+      user_role_id = UserRole.find_by(role_id: role, user_id: @user.id).id
+      @user.as_json(only:[:id,:email,:f_name,:l_name,:dob,:doj,:reporting_user_id]).merge("role" => role, "user_role_id" => user_role_id)
     end
 
     def admin_updation_part
-      if Role.find(params[:id]).name == "admin"
+      if @user.current_role == "admin"
         @user.update(update_admin_params) ? (render :json => {:message => "updated successfully"}) : (render json: @user.errors)
       else
         unless check_reporting_role

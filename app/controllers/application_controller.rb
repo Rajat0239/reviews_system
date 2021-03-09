@@ -1,11 +1,13 @@
 class ApplicationController < ActionController::API
+
   load_and_authorize_resource
+
   rescue_from CanCan::AccessDenied do |exception|
-    render json: "Not Authorised"
+    render :json => {:message => "not authorised"}, status: 401
   end
 
   rescue_from ActiveRecord::RecordNotFound do |exception|
-    render :json => {:message => "this record not found"}
+    render :json => {:message => "record not found"}, status: 404
   end
   
   def current_user
@@ -29,13 +31,13 @@ class ApplicationController < ActionController::API
     return role.id
   end
 
-  # def success_response(msg)
-  #   render :json => {:message => msg), status: 200
-  # end
+  def success_response(message)
+    render :json => {:message => message}, status: 200
+  end
 
-  # def faliure_response(msg)
-  #   render json: msg, status: 422
-  # end
+  def faliure_response(message)
+    render :json => {:message => message}, status: 422
+  end
 
 end
  
