@@ -3,7 +3,7 @@ class ApplicationController < ActionController::API
   load_and_authorize_resource
 
   rescue_from CanCan::AccessDenied do |exception|
-    render :json => {:message => "not authorised"}, status: 401
+    render :json => {:message => "This User Not Authorised !"}, status: 401
   end
 
   rescue_from ActiveRecord::RecordNotFound do |exception|

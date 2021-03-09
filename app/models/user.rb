@@ -7,10 +7,11 @@ class User < ApplicationRecord
 
   validates :f_name, :l_name, :dob, :doj, :current_role, :reporting_user_id,  presence: true
 
-  scope :find_user, ->(id) { find(id) }
-  scope :find_user_current_role, ->(id) { find(id).current_role }
-  scope :excluding_admin, -> { where.not(current_role: 'admin') }
-  scope :employee_under_manager, ->(id) { where('reporting_user_id = ? AND active_status = ?', id, true) }
+  scope :find_user, ->(id) {find(id)}
+  scope :find_user_current_role, ->(id) {find(id).current_role}
+  scope :excluding_admin, ->{where.not(current_role: "admin", active_status: "false")}
+  scope :employee_under_manager, ->(id){where("reporting_user_id = ? AND active_status = ?",id,true)}
+
 
   has_many :reviews
   has_many :user_roles

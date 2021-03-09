@@ -5,12 +5,11 @@ Rails.application.routes.draw do
     resources :review_dates
     resources :question_types
     resources :questions
-    resources :feedback_by_reporting_users
+    resources :feedback_by_reporting_users, only: [:index, :create]
     resources :question_for_users
     get '/feedback_by_reporting_users/:feedback_for_user_id', to: 'feedback_by_reporting_users#show'
     get '/show_reviews/:user_id', to: 'reviews#show_reviews'
-    get '/questions/manager_question_list', to: 'questions#manager_question_list'
-    get '/questions/employee_question_list', to: 'questions#employee_question_list'
+    get '/questions/question_list/:role', to: 'questions#question_list'
     get '/questions/:id', to: 'questions#show'
     put '/feedback_by_reporting_users/:user_id', to: 'feedback_by_reporting_users#update'
     get '/asset_items_of_user/:id', to: 'users#asset_items_of_user'

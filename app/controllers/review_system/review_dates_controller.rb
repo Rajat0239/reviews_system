@@ -1,5 +1,5 @@
 class ReviewSystem::ReviewDatesController < ApplicationController
-
+  
   def index
     @review_dates = ReviewDate.date_for_quarter(current_quarter)
     if @review_dates.present?
