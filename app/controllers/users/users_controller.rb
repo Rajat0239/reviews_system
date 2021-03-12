@@ -47,6 +47,11 @@ class Users::UsersController < ApplicationController
     end   
   end
 
+
+  def user_list_for_allocation
+    @users = User.all
+  end
+
   private
 
   def user_params
@@ -58,6 +63,7 @@ class Users::UsersController < ApplicationController
     params.require(:user).permit(:f_name, :l_name, :dob, :doj, :reporting_user_id,
                                  { user_roles_attributes: %i[id role_id] })
   end
+
 
   def update_admin_params
     params.require(:user).permit(:password, :f_name, :l_name, :dob)
@@ -87,6 +93,14 @@ class Users::UsersController < ApplicationController
                                                                                     'user_role_id' => user_role_id)
     # @user.as_json(only:[:id,:email,:f_name,:l_name,:dob,:doj,:reporting_user_id]).merge("role" => role)
   end
+
+#     def user_data_for_admin
+#       role = Role.find_by(name: @user.current_role).id
+#       user_role_id = UserRole.find_by(role_id: role, user_id: @user.id).id
+#       @user.as_json(only:[:id,:email,:f_name,:l_name,:dob,:doj,:reporting_user_id]).merge("role" => role, "user_role_id" => user_role_id)
+#       ser.as_json(only:[:id,:email,:f_name,:l_name,:dob,:doj,:reporting_user_id]).merge("role" => role)
+#     end
+
 
   def admin_updation_part
     if User.find(params[:id]).current_role == 'admin'
