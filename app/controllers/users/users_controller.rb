@@ -45,7 +45,10 @@ class Users::UsersController < ApplicationController
     render :json => {:message => "user has been disabled"}
   end
 
-  
+  def user_list_for_allocation
+    @users = User.all
+  end
+
   private
 
     def user_params
@@ -53,7 +56,7 @@ class Users::UsersController < ApplicationController
     end
 
     def update_params_when_admin
-      params.require(:user).permit(:f_name, :l_name, :dob, :doj, :reporting_user_id, {user_roles_attributes: [:id, :role_id]})
+      params.require(:user).permit(:f_name, :l_name, :dob, :doj, :reporting_user_id, {user_roles_attributes: [:id, :role_id, :_destroy]})
     end
 
     def update_admin_params
@@ -81,7 +84,7 @@ class Users::UsersController < ApplicationController
       role = Role.find_by(name: @user.current_role).id
       user_role_id = UserRole.find_by(role_id: role, user_id: @user.id).id
       @user.as_json(only:[:id,:email,:f_name,:l_name,:dob,:doj,:reporting_user_id]).merge("role" => role, "user_role_id" => user_role_id)
-      # @user.as_json(only:[:id,:email,:f_name,:l_name,:dob,:doj,:reporting_user_id]).merge("role" => role)
+      ser.as_json(only:[:id,:email,:f_name,:l_name,:dob,:doj,:reporting_user_id]).merge("role" => role)
     end
 
     def admin_updation_part

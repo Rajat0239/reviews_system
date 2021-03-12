@@ -20,6 +20,7 @@ Rails.application.routes.draw do
     resources :asset_items
     resources :asset_item_values
     resources :asset_tracks
+    get '/show_assets_with_free_items', to: 'assets#show_assets_with_free_items'
     patch '/allocation_of_asset_items/:id', to: 'asset_items#allocation_of_assets'
     get '/show_asset_items/:id', to: 'assets#show_asset_items'
     patch '/deallocation_of_asset_items/:id', to: 'asset_items#deallocation_of_assets'
@@ -27,10 +28,12 @@ Rails.application.routes.draw do
     get '/free_asset_items', to: 'asset_items#list_of_free_assets'
     get '/allocated_asset_items_for_asset/:id', to: 'assets#show_allocated_assets'
     get '/free_assets_of_asset/:id', to: 'assets#show_free_assets'
+    get '/show_assets_with_allocated_items', to: 'assets#show_assets_with_allocated_items'
   end
   namespace :users do
     resources :users
     resources :session
     resources :roles
+    get '/user_list_for_allocation', to: 'users#user_list_for_allocation'
   end
 end

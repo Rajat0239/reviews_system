@@ -25,7 +25,6 @@ class Users::RolesController < ApplicationController
   end
   
   def destroy
-    byebug
     @role = Role.find(params[:id])
     (@role.destroy) ? (render json: {:message => "Role deleted successfully"}) : (render json: @role.errors)
   end

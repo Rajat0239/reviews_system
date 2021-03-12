@@ -13,20 +13,20 @@ class InventorySystem::AssetItemsController < ApplicationController
 
   def create
     @asset_item = @asset.asset_items.new(asset_item_params)
-    @asset_item.save ? (render :json => {:message => "asset item added succussfully"}) : (render json: @asset_item.errors.full_messages)
+    @asset_item.save ? success_response("asset item added succussfully") : faliure_response(@asset_item.errors.full_messages)
   end
 
   def update
-    @asset_item.update(asset_item_params) ? (render :json => {:message => "asset item updated succussfully"}) : (render json: @asset_item.errors.full_messages)
+    @asset_item.update(asset_item_params) ? success_response("asset item updated succussfully") : faliure_response(@asset_item.errors.full_messages)
   end
 
   def destroy
-    @asset_item.destroy ? (render :json => {:message => "asset item deleted succussfully"}) : (render json: @asset_item.errors.full_messages)
+    @asset_item.destroy ? success_response("asset item deleted succussfully") : faliure_response(@asset_item.errors.full_messages)
   end
 
   def allocation_of_assets
     unless check_asset_is_allocated_or_not?
-      @asset_item.update(user_id: params[:user_id]) ? (render :json => {:message => "asset item allocated successfully"}) : (render json: @asset_item.errors.full_messages)
+      @asset_item.update(user_id: params[:user_id]) ? success_response("asset item allocated successfully") : faliure_response(@asset_item.errors.full_messages)
     else
       render :json => {:message => "the asset is already allocated to the user"}
     end
@@ -34,7 +34,7 @@ class InventorySystem::AssetItemsController < ApplicationController
   
   def deallocation_of_assets
     if check_asset_is_allocated_or_not?
-      @asset_item.update(user_id: nil) ? (render :json => {:message => "asset item deallocated successfully"}) : (render json: @asset_item.errors.full_messages)
+      @asset_item.update(user_id: nil) ? success_response("asset item deallocated successfully") : faliure_response(@asset_item.errors.full_messages)
     else
       render :json => {:message => "the asset is not allocated to any user"}
     end
@@ -72,7 +72,7 @@ class InventorySystem::AssetItemsController < ApplicationController
 
   def check_all_fields_must_present
     @asset = Asset.find(params[:asset_item_data][:asset_id])
-    render :json => {:message => "all fields must be present"} unless params[:asset_item_data][:asset_item_values_attributes].count == @asset.asset_fields.count
+    faliure_response("all fields must be present") unless params[:asset_item_data][:asset_item_values_attributes].count == @asset.asset_fields.count
   end
 
 end
