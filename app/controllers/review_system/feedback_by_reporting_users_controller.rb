@@ -7,9 +7,9 @@ class ReviewSystem::FeedbackByReportingUsersController < ApplicationController
     allotted_ids = Review.where(user_id: params[:feedback_for_user_id],quarter:current_quarter)
     allotted_ids.map do |data|
       @question = QuestionForUser.where(id:data.question_for_user_id).joins(:question)
-      @question = @question.first.question
+      @question = @question.first.question if !@question.empty?
       get_feedbacks(data.id, params[:feedback_for_user_id])
-      if !@feedback.present?
+      if !@feedback.present? || !@question.present?
         render :json => {:message => "Sorry! feedback is not available!"} 
         return 
       else
@@ -21,6 +21,7 @@ class ReviewSystem::FeedbackByReportingUsersController < ApplicationController
     get_ratings(params[:feedback_for_user_id])
     if !@ratings.present?
       render :json => {:message => "Sorry! feedback is not approval by admin!"}  
+      return
     else
       @ratings = {"ratings" => @ratings}
      (@reviews.empty?) ? (render :json => {:message => "Sorry! review is not available!"}) : (render json: @reviews.push(@ratings))

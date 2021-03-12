@@ -2,6 +2,7 @@ class Users::UsersController < ApplicationController
 
   def index
     if role_is_admin
+      byebug
       user_listing = User.excluding_admin
       render json: user_listing.as_json(only: [:id, :f_name, :l_name, :current_role, :active_status])
     else current_user.current_role == "manager"
@@ -14,7 +15,7 @@ class Users::UsersController < ApplicationController
     if role_is_admin
       render json: user_data_for_admin
     else
-      render json: current_user.as_json(only: [:email,:f_name,:l_name,:dob,:doj])
+      render json: current_user.as_json(only: [:email,:f_name,:l_name,:dob])
     end
   end
 
@@ -22,7 +23,7 @@ class Users::UsersController < ApplicationController
     if check_reporting_role
       @user = User.new(user_params)
       @user.current_role = user_role
-      @user.save ? (render json: @user) : (render json: @user.errors)
+      @user.save ? (render :json => {:message => @user}) : (render :json =>{:message => @user.errors.messages})
     else
       render :json => {:message => "reporting role is invalid"}
     end
@@ -83,10 +84,11 @@ class Users::UsersController < ApplicationController
       role = Role.find_by(name: @user.current_role).id
       user_role_id = UserRole.find_by(role_id: role, user_id: @user.id).id
       @user.as_json(only:[:id,:email,:f_name,:l_name,:dob,:doj,:reporting_user_id]).merge("role" => role, "user_role_id" => user_role_id)
+      ser.as_json(only:[:id,:email,:f_name,:l_name,:dob,:doj,:reporting_user_id]).merge("role" => role)
     end
 
     def admin_updation_part
-      if @user.current_role == "admin"
+      if User.find(params[:id]).current_role == "admin"
         @user.update(update_admin_params) ? (render :json => {:message => "updated successfully"}) : (render json: @user.errors)
       else
         unless check_reporting_role
