@@ -32,9 +32,9 @@ ActiveRecord::Schema.define(version: 2021_03_05_093953) do
 
   create_table "asset_items", force: :cascade do |t|
     t.integer "asset_id"
-    t.string "integer"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "integer"
     t.integer "user_id"
     t.index ["asset_id"], name: "index_asset_items_on_asset_id"
     t.index ["user_id"], name: "index_asset_items_on_user_id"
@@ -68,13 +68,26 @@ ActiveRecord::Schema.define(version: 2021_03_05_093953) do
     t.index ["user_id"], name: "index_feedback_by_reporting_users_on_user_id"
   end
 
+  create_table "question_backups", force: :cascade do |t|
+    t.integer "question_id"
+    t.string "question_name"
+    t.string "options"
+    t.integer "question_type_id"
+    t.integer "question_for_user_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["question_for_user_id"], name: "index_question_backups_on_question_for_user_id"
+    t.index ["question_id"], name: "index_question_backups_on_question_id"
+    t.index ["question_type_id"], name: "index_question_backups_on_question_type_id"
+  end
+
   create_table "question_for_users", force: :cascade do |t|
     t.integer "role_id"
     t.integer "question_id"
     t.string "quarter"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.boolean "status", default: true
+    t.string "status"
     t.index ["question_id"], name: "index_question_for_users_on_question_id"
     t.index ["role_id"], name: "index_question_for_users_on_role_id"
   end
@@ -91,7 +104,6 @@ ActiveRecord::Schema.define(version: 2021_03_05_093953) do
     t.string "options"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.boolean "status", default: true
     t.index ["question_type_id"], name: "index_questions_on_question_type_id"
   end
 
@@ -120,9 +132,9 @@ ActiveRecord::Schema.define(version: 2021_03_05_093953) do
   end
 
   create_table "review_dates", force: :cascade do |t|
-    t.string "quarter"
     t.date "start_date"
     t.date "deadline_date"
+    t.string "quarter"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -146,7 +158,6 @@ ActiveRecord::Schema.define(version: 2021_03_05_093953) do
   create_table "user_roles", force: :cascade do |t|
     t.integer "role_id"
     t.integer "user_id"
-    t.string "name"
     t.index ["role_id"], name: "index_user_roles_on_role_id"
     t.index ["user_id"], name: "index_user_roles_on_user_id"
   end
@@ -156,22 +167,24 @@ ActiveRecord::Schema.define(version: 2021_03_05_093953) do
     t.string "encrypted_password", default: "", null: false
     t.string "f_name"
     t.string "l_name"
-    t.date "dob"
+    t.datetime "dob"
+    t.string "current_role"
+    t.boolean "active_status"
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.string "current_role"
     t.string "authentication_token", limit: 30
     t.integer "reporting_user_id"
-    t.boolean "active_status", default: true
     t.date "doj"
     t.index ["authentication_token"], name: "index_users_on_authentication_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["reporting_user_id"], name: "index_users_on_reporting_user_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  add_foreign_key "feedback_by_reporting_users", "users"
+  add_foreign_key "asset_items", "users"
   add_foreign_key "feedback_by_reporting_users", "users", column: "feedback_for_user_id"
+  add_foreign_key "users", "users", column: "reporting_user_id"
 end

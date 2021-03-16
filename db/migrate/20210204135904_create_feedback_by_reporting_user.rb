@@ -1,5 +1,6 @@
 class CreateFeedbackByReportingUser < ActiveRecord::Migration[6.0]
   def change
+    drop_table :feedback_by_reporting_users
     create_table :feedback_by_reporting_users do |t|
       t.belongs_to :user
       t.text :feedback
