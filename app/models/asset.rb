@@ -5,6 +5,7 @@ class Asset < ApplicationRecord
 
   has_many :asset_fields, dependent: :destroy
   has_many :asset_items, dependent: :destroy
+  has_many :asset_requests
 
   accepts_nested_attributes_for :asset_fields, allow_destroy: true
 

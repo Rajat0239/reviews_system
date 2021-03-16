@@ -36,6 +36,10 @@ class InventorySystem::AssetsController < ApplicationController
     render json: @asset.asset_items.where("asset_items.user_id IS NULL").joins(:asset).select("asset_items.id, (assets.name || ' ' || asset_items.asset_count) as asset_name") 
   end
 
+  def show_assets_with_free_items
+    @assets = Asset.all
+  end
+
   private
 
   def asset_params

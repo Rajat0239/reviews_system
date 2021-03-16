@@ -47,6 +47,18 @@ class Users::UsersController < ApplicationController
     end   
   end
 
+  def user_inventory_list
+  end
+
+  def asset_requests
+    @asset_request = @user.asset_requests.new(asset_requests_params)
+    if @asset_request.save
+      render json: { message: 'request sent'}
+    else
+      render json: { message: @asset_request.errors.full_messages }
+    end
+  end
+
   private
 
   def user_params
@@ -65,6 +77,10 @@ class Users::UsersController < ApplicationController
 
   def user_own_params
     params.require(:user).permit(:password, :f_name, :l_name, :dob)
+  end
+
+  def asset_requests_params
+    params.require(:asset_request).permit(:asset_id, :reason)
   end
 
   def user_role

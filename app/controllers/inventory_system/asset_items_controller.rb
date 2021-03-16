@@ -74,5 +74,4 @@ class InventorySystem::AssetItemsController < ApplicationController
     @asset = Asset.find(params[:asset_item_data][:asset_id])
     render :json => {:message => "all fields must be present"} unless params[:asset_item_data][:asset_item_values_attributes].count == @asset.asset_fields.count
   end
-
 end

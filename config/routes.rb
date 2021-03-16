@@ -20,6 +20,8 @@ Rails.application.routes.draw do
     resources :asset_items
     resources :asset_item_values
     resources :asset_tracks
+    resources :asset_requests
+    get '/show_assets_with_free_items', to: 'assets#show_assets_with_free_items'
     patch '/allocation_of_asset_items/:id', to: 'asset_items#allocation_of_assets'
     get '/show_asset_items/:id', to: 'assets#show_asset_items'
     patch '/deallocation_of_asset_items/:id', to: 'asset_items#deallocation_of_assets'
@@ -32,5 +34,7 @@ Rails.application.routes.draw do
     resources :users
     resources :session
     resources :roles
+    get '/user_inventory_list/:id', to: 'users#user_inventory_list'
+    post '/asset_requests/:id', to: 'users#asset_requests'
   end
 end
