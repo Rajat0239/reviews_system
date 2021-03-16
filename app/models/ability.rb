@@ -9,18 +9,19 @@ class Ability
       end
 
       if user_role == "manager"
-        can [:update, :read, :show_reviews_of_user, :show], User
+        can [:update, :read, :show_reviews_of_user, :show, :asset_requests], User
         can [:create, :read, :show_reviews], Review
         can [:create, :read], FeedbackByReportingUser
         can [:read], QuestionForUser
-        
+        can [:read], Asset
       end
 
       if user_role == "employee" 
-        can [:update, :show], User
+        can [:update, :show, :user_inventory_list, :asset_requests], User
         can [:create, :read, :show_reviews], Review 
         can [:read], FeedbackByReportingUser
         can [:read], QuestionForUser
+        can [:read], Asset
       end
     end
   end

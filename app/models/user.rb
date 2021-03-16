@@ -21,6 +21,7 @@ class User < ApplicationRecord
   has_many :ratings
   has_many :asset_items
   has_many :asset_tracks
+  has_many :asset_requests, dependent: :destroy
 
   accepts_nested_attributes_for :user_roles, allow_destroy: true
 

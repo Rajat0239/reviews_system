@@ -1,5 +1,4 @@
 class AssetItem < ApplicationRecord
-
   before_create :set_asset_count
   before_save :update_asset_track, if: :user_id_changed?
 
@@ -11,7 +10,7 @@ class AssetItem < ApplicationRecord
   validates_uniqueness_of :asset_id, :scope => [:asset_count]
   validates_presence_of :user, if: Proc.new { |a| a.user_id.present? }
 
-  accepts_nested_attributes_for :asset_item_values, allow_destroy: true   
+  accepts_nested_attributes_for :asset_item_values, allow_destroy: true
 
   private
 
@@ -23,5 +22,4 @@ class AssetItem < ApplicationRecord
   def update_asset_track
     self.asset_tracks.new(user_id: user_id)
   end
-
 end
