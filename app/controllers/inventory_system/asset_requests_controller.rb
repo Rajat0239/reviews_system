@@ -6,8 +6,6 @@ class InventorySystem::AssetRequestsController < ApplicationController
   def update
     if @asset_request.update(status: true)
       success_response('request declined')
-    else
-      failure_response
     end
   end
 end
