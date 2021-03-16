@@ -37,7 +37,6 @@ module ReviewHelper
   end
 
   def all_question_mendatory
-    byebug
     render json: {message: "all the questions are mendatory"} unless params[:reviews].count == QuestionForUser.where(role_id: role_id, status: true).count 
   end
 

@@ -17,10 +17,10 @@ class ReviewSystem::ReviewsController < ApplicationController
   def create
     @error = create_reviews(params[:reviews],params[:ratings])
     if @error.present?
-      send_email_to_reporting_user
-      render json: {role: current_user.current_role}   
-    else
       render json: @error
+    else
+      send_email_to_reporting_user
+      render json: {message: 'given successfully'} 
     end
   end
 
