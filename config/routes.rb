@@ -29,6 +29,7 @@ Rails.application.routes.draw do
     get '/free_asset_items', to: 'asset_items#list_of_free_assets'
     get '/allocated_asset_items_for_asset/:id', to: 'assets#show_allocated_assets'
     get '/free_assets_of_asset/:id', to: 'assets#show_free_assets'
+    get '/show_assets_with_allocated_items', to: 'assets#show_assets_with_allocated_items'
   end
   namespace :users do
     resources :users

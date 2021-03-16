@@ -1,7 +1,5 @@
 class InventorySystem::AssetsController < ApplicationController
 
-  respond_to :html
-
   before_action :filer_fields, only: [:create, :update]
 
   def index
@@ -14,18 +12,19 @@ class InventorySystem::AssetsController < ApplicationController
 
   def create
     @asset = Asset.new(asset_params)
-    @asset.save ? (render :json => {:message => "asset created succussfully"}) : (render json: @asset.errors.full_messages)
+    @asset.save ? success_response("asset created succussfully") : faliure_response(@asset.errors.full_messages)
   end
 
   def update
-    @asset.update(asset_params) ? (render :json => {:message => "asset updated succussfully"}) : (render json: @asset.errors.full_messages)
+    @asset.update(asset_params) ? success_response("asset updated succussfully") : faliure_response(@asset.errors.full_messages)
   end
 
   def destroy
-    @asset.destroy ? (render :json => {:message => "asset deleted succussfully"}) : (render json: @asset.errors.full_messages)
+    @asset.destroy ? success_response("asset deleted succussfully") : faliure_response(@asset.errors.full_messages)
   end
 
   def show_asset_items
+    @asset
   end
 
   def show_allocated_assets
@@ -40,18 +39,21 @@ class InventorySystem::AssetsController < ApplicationController
     @assets = Asset.all
   end
 
+  def show_assets_with_allocated_items
+    @assets = Asset.all
+  end
+
   private
 
   def asset_params
-    params.require(:asset_data).permit(:name, {asset_fields_attributes: [:id, :field]})
+    params.require(:asset_data).permit(:name, {asset_fields_attributes: [:id, :field, :_destroy] } )
   end
 
   def filer_fields
-    params[:asset_data][:asset_fields_attributes] = params[:asset_data][:asset_fields_attributes].uniq {|field| field[:field]}
+    params[:asset_data][:asset_fields_attributes] = params[:asset_data][:asset_fields_attributes].uniq { |field| field[:field]}
   end
 
   def show_asset_with_fields
-    {asset_data: {id: @asset.id, name: @asset.name}, asset_fields_attributes: @asset.asset_fields.select(:id, :field)}    
+    {asset_data: { id: @asset.id, name: @asset.name}, asset_fields_attributes: @asset.asset_fields.select(:id, :field)}
   end
-
 end
