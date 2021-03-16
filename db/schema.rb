@@ -10,7 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< Updated upstream
 ActiveRecord::Schema.define(version: 2021_03_05_093953) do
+=======
+ActiveRecord::Schema.define(version: 2021_03_16_082947) do
+>>>>>>> Stashed changes
 
   create_table "asset_fields", force: :cascade do |t|
     t.integer "asset_id"
@@ -34,7 +38,11 @@ ActiveRecord::Schema.define(version: 2021_03_05_093953) do
     t.integer "asset_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+<<<<<<< Updated upstream
     t.integer "integer"
+=======
+    t.integer "asset_count"
+>>>>>>> Stashed changes
     t.integer "user_id"
     t.index ["asset_id"], name: "index_asset_items_on_asset_id"
     t.index ["user_id"], name: "index_asset_items_on_user_id"
