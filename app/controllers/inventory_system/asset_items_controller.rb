@@ -8,7 +8,7 @@ class InventorySystem::AssetItemsController < ApplicationController
   end
 
   def show
-    render json: {asset_item: {id: @asset_item.id, asset_id: @asset_item.asset_id, name: (@asset_item.asset.name + " " + @asset_item.asset_count.to_s)}, asset_item_field_and_values: show_asset_item_fields_and_values}
+    @asset_item
   end
 
   def create
