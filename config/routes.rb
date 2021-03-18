@@ -36,6 +36,5 @@ Rails.application.routes.draw do
     resources :session
     resources :roles
     get '/user_inventory_list/:id', to: 'users#user_inventory_list'
-    post '/asset_requests/:id', to: 'users#asset_requests'
   end
 end
