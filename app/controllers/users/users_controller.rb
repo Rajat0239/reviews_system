@@ -49,15 +49,6 @@ class Users::UsersController < ApplicationController
 
   def user_inventory_list
   end
-
-  def asset_requests
-    @asset_request = @user.asset_requests.new(asset_requests_params)
-    if @asset_request.save
-      render json: { message: 'request sent'}
-    else
-      render json: { message: @asset_request.errors.full_messages }
-    end
-  end
   
   def user_list_for_allocation
     @users = User.all
@@ -84,10 +75,6 @@ class Users::UsersController < ApplicationController
     params.require(:user).permit(:password, :f_name, :l_name, :dob)
   end
 
-  def asset_requests_params
-    params.require(:asset_request).permit(:asset_id, :reason)
-  end
-
   def user_role
     Role.find_role(params[:user][:user_roles_attributes][0][:role_id])
   end
@@ -106,16 +93,7 @@ class Users::UsersController < ApplicationController
     user_role_id = UserRole.find_by(role_id: role, user_id: @user.id).id
     @user.as_json(only: %i[id email f_name l_name dob doj reporting_user_id]).merge('role' => role,
                                                                                     'user_role_id' => user_role_id)
-    # @user.as_json(only:[:id,:email,:f_name,:l_name,:dob,:doj,:reporting_user_id]).merge("role" => role)
   end
-
-#     def user_data_for_admin
-#       role = Role.find_by(name: @user.current_role).id
-#       user_role_id = UserRole.find_by(role_id: role, user_id: @user.id).id
-#       @user.as_json(only:[:id,:email,:f_name,:l_name,:dob,:doj,:reporting_user_id]).merge("role" => role, "user_role_id" => user_role_id)
-#       ser.as_json(only:[:id,:email,:f_name,:l_name,:dob,:doj,:reporting_user_id]).merge("role" => role)
-#     end
-
 
   def admin_updation_part
     if User.find(params[:id]).current_role == 'admin'

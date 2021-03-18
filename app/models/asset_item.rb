@@ -6,6 +6,7 @@ class AssetItem < ApplicationRecord
   belongs_to :asset
   belongs_to :user, optional: true
   has_many :asset_tracks
+  has_many :asset_requests
 
   validates_uniqueness_of :asset_id, :scope => [:asset_count]
   validates_presence_of :user, if: Proc.new { |a| a.user_id.present? }
