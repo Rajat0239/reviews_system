@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_16_062434) do
+ActiveRecord::Schema.define(version: 2021_03_16_082947) do
 
   create_table "asset_fields", force: :cascade do |t|
     t.integer "asset_id"
@@ -32,10 +32,9 @@ ActiveRecord::Schema.define(version: 2021_03_16_062434) do
 
   create_table "asset_items", force: :cascade do |t|
     t.integer "asset_id"
-    t.integer "asset_count"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.integer "integer"
+    t.integer "asset_count"
     t.integer "user_id"
     t.index ["asset_id"], name: "index_asset_items_on_asset_id"
     t.index ["user_id"], name: "index_asset_items_on_user_id"
