@@ -31,7 +31,7 @@ class InventorySystem::AssetItemsController < ApplicationController
       render :json => {:message => "the asset is already allocated to the user"}
     end
   end
-  
+
   def deallocation_of_assets
     if check_asset_is_allocated_or_not?
       @asset_item.update(user_id: nil) ? success_response("asset item deallocated successfully") : faliure_response(@asset_item.errors.full_messages)
@@ -67,7 +67,7 @@ class InventorySystem::AssetItemsController < ApplicationController
   end
 
   def show_asset_item_fields_and_values
-    AssetField.joins(:asset_item_values).where("asset_item_values.asset_item_id = ?",@asset_item.id).select("asset_item_values.id, asset_fields.id as asset_field_id, asset_fields.field, asset_item_values.value")    
+    AssetField.joins(:asset_item_values).where("asset_item_values.asset_item_id = ?",@asset_item.id).select("asset_item_values.id, asset_fields.id as asset_field_id, asset_fields.field, asset_item_values.value")
   end
 
   def check_asset_is_allocated_or_not?
