@@ -33,7 +33,7 @@ class InventorySystem::AssetRequestsController < ApplicationController
     @asset_request.destroy
     success_response('request deleted')
   end
-  
+
   private
 
   def request_params

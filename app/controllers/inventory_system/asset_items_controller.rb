@@ -48,6 +48,14 @@ class InventorySystem::AssetItemsController < ApplicationController
     render json: Asset.free_assets
   end
 
+  def asset_item_history
+    @asset_item
+  end
+
+  def all_asset_items_history
+    @asset_items = AssetItem.all
+  end
+
   private
 
   def asset_item_params

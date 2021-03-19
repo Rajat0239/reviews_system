@@ -21,6 +21,10 @@ class AssetItem < ApplicationRecord
   end
 
   def update_asset_track
-    self.asset_tracks.new(user_id: user_id)
+    if asset_tracks.empty? || user
+      asset_tracks.new(user_id: user_id, assigned_on: Time.now)
+    else
+      asset_tracks.last.update(submitted_on: Time.now)
+    end
   end
 end
