@@ -40,16 +40,17 @@ class Users::UsersController < ApplicationController
 
   def destroy
     if @user.update(active_status: false)
-       update_users_reporting_user(@user) if @user.current_role == 'manager'
-       render json: { message: 'user has been disabled' }
+      update_users_reporting_user(@user) if @user.current_role == 'manager'
+      render json: { message: 'user has been disabled' }
     else
       render json: { message: @user.errors.messages.first}
-    end   
+    end
   end
 
   def user_inventory_list
+    @user
   end
-  
+
   def user_list_for_allocation
     @users = User.all
   end
@@ -65,7 +66,6 @@ class Users::UsersController < ApplicationController
     params.require(:user).permit(:f_name, :l_name, :dob, :doj, :reporting_user_id,
                                  { user_roles_attributes: %i[id role_id] })
   end
-
 
   def update_admin_params
     params.require(:user).permit(:password, :f_name, :l_name, :dob)

@@ -30,6 +30,8 @@ Rails.application.routes.draw do
     get '/allocated_asset_items_for_asset/:id', to: 'assets#show_allocated_assets'
     get '/free_assets_of_asset/:id', to: 'assets#show_free_assets'
     get '/show_assets_with_allocated_items', to: 'assets#show_assets_with_allocated_items'
+    get '/all_asset_items_history', to: 'asset_items#all_asset_items_history'
+    get '/asset_item_history/:id', to: 'asset_items#asset_item_history'
   end
   namespace :users do
     resources :users
