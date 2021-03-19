@@ -36,5 +36,6 @@ Rails.application.routes.draw do
     resources :session
     resources :roles
     get '/user_inventory_list/:id', to: 'users#user_inventory_list'
+    get '/user_list_for_allocation', to: 'users#user_list_for_allocation'
   end
 end
