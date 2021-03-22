@@ -22,9 +22,9 @@ Rails.application.routes.draw do
     resources :asset_tracks
     resources :asset_requests
     get '/show_assets_with_free_items', to: 'assets#show_assets_with_free_items'
-    patch '/allocation_of_asset_items/:id', to: 'asset_items#allocation_of_assets'
+    put '/allocation_of_asset_items/:id', to: 'asset_items#allocation_of_assets'
     get '/show_asset_items/:id', to: 'assets#show_asset_items'
-    patch '/deallocation_of_asset_items/:id', to: 'asset_items#deallocation_of_assets'
+    put '/deallocation_of_asset_items/:id', to: 'asset_items#deallocation_of_assets'
     get '/allocated_asset_items', to: 'asset_items#list_of_allocated_assets'
     get '/free_asset_items', to: 'asset_items#list_of_free_assets'
     get '/allocated_asset_items_for_asset/:id', to: 'assets#show_allocated_assets'

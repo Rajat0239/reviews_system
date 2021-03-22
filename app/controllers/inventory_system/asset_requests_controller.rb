@@ -7,6 +7,7 @@ class InventorySystem::AssetRequestsController < ApplicationController
       @asset_requests = AssetRequest.where(status: 'pending')
     else
       @asset_requests = current_user.asset_requests
+      @asset_requests
     end
   end
 
