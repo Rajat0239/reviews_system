@@ -8,15 +8,16 @@ class AssetItem < ApplicationRecord
   has_many :asset_tracks
   has_many :asset_requests
 
-  validates_uniqueness_of :asset_id, :scope => [:asset_count]
-  validates_presence_of :user, if: Proc.new { |a| a.user_id.present? }
+  validates_uniqueness_of :asset_id, scope: [:asset_count]
+  validates_presence_of :user, if: proc { |a| a.user_id.present? }
+  validate :validate_item_must_be_free, on: [:update]
 
   accepts_nested_attributes_for :asset_item_values, allow_destroy: true
 
   private
 
   def set_asset_count
-    max = self.asset.asset_items.pluck(:asset_count).compact.max
+    max = asset.asset_items.pluck(:asset_count).compact.max
     self.asset_count = max ? max + 1 : 1
   end
 
@@ -26,5 +27,9 @@ class AssetItem < ApplicationRecord
     else
       asset_tracks.last.update(submitted_on: Time.now)
     end
+  end
+
+  def validate_item_must_be_free
+    errors.add(:base, 'first free the asset item') if AssetItem.find(id).user.present? && user.present?
   end
 end

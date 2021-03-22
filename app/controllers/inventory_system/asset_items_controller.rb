@@ -25,6 +25,7 @@ class InventorySystem::AssetItemsController < ApplicationController
   end
 
   def allocation_of_assets
+    byebug
     unless check_asset_is_allocated_or_not?
       @asset_item.update(user_id: params[:user_id]) ? success_response("asset item allocated successfully") : faliure_response(@asset_item.errors.full_messages)
     else
