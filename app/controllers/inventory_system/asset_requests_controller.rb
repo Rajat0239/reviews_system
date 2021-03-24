@@ -1,5 +1,4 @@
 class InventorySystem::AssetRequestsController < ApplicationController
-  # before_action :check_params, only: [:create]
 
   def index
     @admin = role_is_admin
@@ -21,9 +20,9 @@ class InventorySystem::AssetRequestsController < ApplicationController
   end
 
   def update
-    if params[:request_data][:status] == "rejected"
+    if params[:request_data][:status] == 'rejected'
       update_request_to_rejected
-    elsif params[:request_data][:status] == "approved"
+    elsif params[:request_data][:status] == 'approved'
       perform_allocation_or_deallocation
     else
       faliure_response('invalid request status')
@@ -53,16 +52,10 @@ class InventorySystem::AssetRequestsController < ApplicationController
     if @asset_request.request_type == 'deallocation' && @asset_request.asset_item.update(user_id: nil)
       update_request_to_approved
       success_response('asset deallocated successfully')
-    else
-      byebug
     end
   end
 
   def update_request_to_approved
     @asset_request.update(request_params)
   end
-
-  # def check_params
-  #   byebug
-  # end
 end
