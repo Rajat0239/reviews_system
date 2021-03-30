@@ -75,13 +75,11 @@ class InventorySystem::AssetItemsController < ApplicationController
 
   def perform_allocation_with_request
     @asset_request = AssetRequest.find(params['request_params']['asset_request_id'])
-    ActiveRecord::Base.transaction do
-      if @asset_item.update(user_id: params[:user_id]) && @asset_request.update(status: 'approved')
-        success_response('asset item allocated successfully')
-      else
-        faliure_response(@asset_item.errors.full_messages)
-        raise ActiveRecord::Rollback
-      end
+    if @asset_item.update(user_id: params[:user_id])
+      @asset_request.update(status: 'approved')
+      success_response('asset item allocated successfully')
+    else
+      faliure_response(@asset_item.errors.full_messages)
     end
   end
 
