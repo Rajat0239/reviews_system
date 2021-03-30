@@ -1,5 +1,6 @@
 json.requests @asset_requests do |asset_request|
   json.request_id asset_request.id
+  json.user_id asset_request.user_id if @admin
   json.user_name "#{asset_request.user.f_name} #{asset_request.user.l_name}" if @admin
   if asset_request.request_type == 'allocation'
     json.asset_id asset_request.asset_id

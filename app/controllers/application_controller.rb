@@ -9,7 +9,7 @@ class ApplicationController < ActionController::API
   rescue_from ActiveRecord::RecordNotFound do |exception|
     render :json => {:message => "record not found"}, status: 404
   end
-  
+
   def current_user
     @current_user ||= User.find_by(authentication_token: request.headers['Authorization'])
   end
@@ -20,12 +20,12 @@ class ApplicationController < ActionController::API
 
   def role_is_admin
     return current_user.current_role == "admin"
-  end 
+  end
 
   def role_is_manager
     return current_user.current_role == "manager"
   end
-  
+
   def role_id
     role =  Role.find_by(name: current_user.current_role)
     return role.id
@@ -40,4 +40,3 @@ class ApplicationController < ActionController::API
   end
 
 end
- 

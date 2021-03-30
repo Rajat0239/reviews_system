@@ -68,20 +68,18 @@ class InventorySystem::AssetItemsController < ApplicationController
   end
 
   def check_all_fields_must_present
-    @count_of_fields = Asset.find(params[:asset_item_data][:asset_id]).asset_fields.count
+    @asset = Asset.find(params[:asset_item_data][:asset_id])
     @count_of_params_fields = params[:asset_item_data][:asset_item_values_attributes].count
-    faliure_response('all fields must be present') unless @count_of_params_fields == @count_of_fields
+    faliure_response('all fields must be present') unless @count_of_params_fields == @asset.asset_fields.count
   end
 
   def perform_allocation_with_request
     @asset_request = AssetRequest.find(params['request_params']['asset_request_id'])
-    ActiveRecord::Base.transaction do
-      if @asset_item.update(user_id: params[:user_id]) && @asset_request.update(status: 'approved')
-        success_response('asset item allocated successfully')
-      else
-        faliure_response(@asset_item.errors.full_messages)
-        raise ActiveRecord::Rollback
-      end
+    if @asset_item.update(user_id: params[:user_id])
+      @asset_request.update(status: 'approved')
+      success_response('asset item allocated successfully')
+    else
+      faliure_response(@asset_item.errors.full_messages)
     end
   end
 
